@@ -2,6 +2,8 @@
 
 namespace avtomon;
 
+use phpQuery;
+
 class FormHelper
 {
     /**

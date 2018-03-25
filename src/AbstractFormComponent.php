@@ -2,16 +2,14 @@
 
 namespace avtomon;
 
-use phpQuery;
-
-class AbstractFormComponent
+abstract class AbstractFormComponent
 {
     use InitTrait;
 
     /**
      * Атрибуты элемента формы
      *
-     * @var array|void
+     * @var array
      */
     protected $attributes = [];
 
@@ -22,7 +20,7 @@ class AbstractFormComponent
      */
     public function __construct(array $settings)
     {
-        $this->attributes = $this->initObject($settings + self::$settings);
+        $this->attributes = $this->initObject($settings);
     }
 
     /**
@@ -32,18 +30,20 @@ class AbstractFormComponent
      */
     public function setAttributes(array $attributes)
     {
-        $this->attributes = $attributes;
+        $this->attributes = array_map(function ($attribute) {
+            return (string) $attribute;
+        }, $attributes);
     }
 
     /**
      * Добавить атрибут
      *
      * @param string $name - имя атрибута
-     * @param $value - значение атрибута
+     * @param string $value - значение атрибута
      */
     public function addAttribute(string $name, $value)
     {
-        $this->attributes[$name] = $value;
+        $this->attributes[$name] = (string) $value;
     }
 
     /**

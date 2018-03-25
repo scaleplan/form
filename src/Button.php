@@ -2,7 +2,9 @@
 
 namespace avtomon;
 
-class ButtonException extends \Exception
+use phpQuery;
+
+class ButtonException extends CustomException
 {
 }
 
@@ -24,11 +26,17 @@ class Button extends AbstractFormComponent
      */
     public function __construct(array $settings)
     {
-        if (empty($settings['text'])) {
-            throw new ButtonException('Не задан текст кнопки');
-        }
-
         parent::__construct($settings);
+    }
+
+    /**
+     * Установить текст
+     *
+     * @param $text - текст
+     */
+    public function setText($text)
+    {
+        $this->text = (string) $text;
     }
 
     /**

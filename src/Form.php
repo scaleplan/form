@@ -4,7 +4,7 @@ namespace avtomon;
 
 use phpQuery;
 
-class FormException extends \Exception
+class FormException extends CustomException
 {
 }
 
@@ -25,6 +25,13 @@ class Form
      * @var array
      */
     protected $title = [];
+
+    /**
+     * Настройки меню
+     *
+     * @var array
+     */
+    protected $menu = [];
 
     /**
      * Настроки формы
@@ -107,19 +114,28 @@ class Form
     {
         $this->formConf = &$formConf;
 
-        $formConf['form'] = array_merge($formConf['form'], ['method' => 'POST']), ['fields', 'labelafter'])
-
         if (!empty($formConf['sections']) && is_array($formConf['sections'])) {
             foreach ($settings['sections'] as &$section) {
                 $section = new Section($section);
             }
         } else if (!empty($formConf['fields']) && is_array($formConf['fields'])) {
-            foreach ($settings['fields'] as &$field) {
+            foreach ($formConf['fields'] as &$field) {
                 $field = new Field($field);
             }
         }
 
         $this->initObject($formConf);
+    }
+
+    /**
+     * Установить настройки формы
+     *
+     * @param array $form - настройки формы
+     */
+    public function setForm(array $form)
+    {
+        $form['method'] = 'POST';
+        $this->form = $form;
     }
 
     /**
@@ -134,7 +150,7 @@ class Form
                 continue;
             }
 
-            $this->sections[] = $section;
+            $this->sections[$section->getTitle()] = $section;
         }
     }
 
@@ -145,7 +161,7 @@ class Form
      */
     public function addSection(Section $section)
     {
-        $this->sections[] = $section;
+        $this->sections[$section->getTitle()] = $section;
     }
 
     /**
@@ -160,7 +176,7 @@ class Form
                 continue;
             }
 
-            $this->fields[] = $field;
+            $this->fields[$field->getName()] = $field;
         }
     }
 
@@ -183,23 +199,25 @@ class Form
         $form = phpQuery::pq('<form>')->appendTo($formParent);
         FormHelper::renderAttributes($form, $this->form);
 
-        $menu = phpQuery::pq('<menu>');
-        FormHelper::renderAttributes($menu, $this->menu);
-        $title->after($menu);
+        if ($this->sections) {
+            $menu = phpQuery::pq('<menu>');
+            FormHelper::renderAttributes($menu, $this->menu);
+            $title->after($menu);
 
-        foreach($this->sections as $title => $section) {
-            $form->append($section->render());
-            $menu->append((new MenuElement(['text' => $title, 'hash' => $section->getId() ? '#' . $section->getId() : '']))->render());
+            foreach($this->sections as $title => $section) {
+                $form->append($section->render());
+                $menu->append((new MenuElement(['text' => $title, 'hash' => $section->getId() ? '#' . $section->getId() : '']))->render());
+            }
+        } else {
+            foreach($this->fields as $name => $field) {
+                $form->append($field->render());
+            }
         }
 
-        foreach($this->fields as $name => $field) {
-            $form->append($field->render());
-        }
-
-        if (!empty($this->formConf['invisibleClass']) && !empty($this->formConf['currentClass'])) {
+        if (isset($menu) && !empty($this->formConf['invisibleClass']) && !empty($this->formConf['currentClass'])) {
             $visibleNumber = !empty($this->formConf['currentNumber']) ? $this->formConf['currentNumber'] : 0;
-            $this->form->find('section')->eq($visibleNumber)->siblings('section')->addClass($this->formConf['invisibleClass']);
-            $this->menu->find('a')->eq($visibleNumber)->addClass($this->formConf['currentClass']);
+            $form->find('section')->eq($visibleNumber)->siblings('section')->addClass($this->formConf['invisibleClass']);
+            $menu->find('a')->eq($visibleNumber)->addClass($this->formConf['currentClass']);
         }
 
         return $formDocument;
@@ -288,29 +306,36 @@ class Form
         return $field;
     }
 
+
+
     /**
      * Установить опции для выпадающего списка
      *
      * @param string $selectName - имя списка
      * @param array $options - элементы списка
-     *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      */
-    public function setSelectOptions(string $selectName, array $options)
+    public function setSelectOptions(string $selectName, array $options, $emptyText = '', $selectedValue = '')
     {
-        foreach ($this->sections as $section) {
-            foreach ($section->getFields() as $name => $field) {
+        $search = function (array &$fields) use (&$selectName, &$options, &$emptyText, &$selectedValue) {
+            foreach ($fields as $name => $field) {
                 if ($name !== $selectName) {
                     continue;
                 }
 
+                $field->setEmptyText($emptyText);
+                $field->setSelectedValue($selectedValue);
                 foreach ($options as $option) {
-                    $field->addOption(new Option($option));
+                    $option = new Option($option);
+                    $field->addOption($option);
                 }
             }
+        };
+
+        foreach ($this->sections as $section) {
+            $search($section->getFields());
         }
 
-        return $field;
+        $search($this->fields);
     }
 
     /**
@@ -343,5 +368,10 @@ class Form
     public function __toString(): string
     {
         return $this->render();
+    }
+
+    public function getTitleText(): string
+    {
+        return $this->title['text'] ?? '';
     }
 }

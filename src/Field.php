@@ -4,7 +4,7 @@ namespace avtomon;
 
 use phpQuery;
 
-class FieldException extends \Exception
+class FieldException extends CustomException
 {
 }
 
@@ -146,6 +146,13 @@ class Field extends AbstractFormComponent
     protected $fieldWrapper = null;
 
     /**
+     * Значение выбранного элемента списка по умолчанию
+     *
+     * @var string
+     */
+    protected $selectedValue = '';
+
+    /**
      * Конструктор
      *
      * @param array $settings - настройки объекта
@@ -180,6 +187,10 @@ class Field extends AbstractFormComponent
             foreach ($settings['variants'] as &$variant) {
                 $variant = new RadioVariant($variant);
             }
+        }
+
+        if (empty($settings['id'])) {
+            $settings['id'] = $settings['name'];
         }
 
         parent::__construct($settings);
@@ -268,7 +279,57 @@ class Field extends AbstractFormComponent
      */
     public function setValue($value)
     {
-        $this->value = $value;
+        $this->value = (string) $value;
+    }
+
+    /**
+     * Установить имя поля
+     *
+     * @param $name - имя
+     */
+    public function setText($name)
+    {
+        $this->name = (string) $name;
+    }
+
+    /**
+     * Установить текст метки поля
+     *
+     * @param $labelText - текст
+     */
+    public function setLabelText($labelText)
+    {
+        $this->labelText = (string) $labelText;
+    }
+
+    /**
+     * Установить текст пустого элемента списка
+     *
+     * @param $emptyText - текст
+     */
+    public function setEmptyText($emptyText)
+    {
+        $this->emptyText = (string) $emptyText;
+    }
+
+    /**
+     * Установить путь до директории с шаблонами полей
+     *
+     * @param string $templatePath - путь
+     */
+    public function setTemplatePath(string $templatePath)
+    {
+        $this->templatePath = $templatePath;
+    }
+
+    /**
+     * Установить значение элемента списка, выбираемого по умолчанию
+     *
+     * @param $selectedValue - значение
+     */
+    public function setSelectedValue($selectedValue)
+    {
+        $this->selectedValue = (string) $selectedValue;
     }
 
     /**
@@ -310,16 +371,20 @@ class Field extends AbstractFormComponent
      */
     protected function renderSelect()
     {
-        if ($this->type !== 'select') {
+        if ($this->getType() !== 'select') {
             return null;
         }
 
-        $field = phpQuery::pq('<select>')->val($this->value);
+        $field = phpQuery::pq('<select>')->val($this->value)->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
         array_unshift($this->options, new Option(['text' => $this->emptyText]));
 
         foreach($this->options as $option) {
+            if ($this->selectedValue === $option->getValue() || $this->selectedValue === $option->getText()) {
+                $option->addAttribute('selected', 'selected');
+            }
+
             $option->render()->appendTo($field);
         }
 
@@ -352,7 +417,7 @@ class Field extends AbstractFormComponent
      */
     protected function renderTemplate()
     {
-        if ($this->type !== 'template') {
+        if ($this->getType() !== 'template') {
             return null;
         }
 
@@ -362,12 +427,10 @@ class Field extends AbstractFormComponent
 
         $fieldWrapper = phpQuery::pq(file_get_contents($this->templatePath . '/' . $this->template));
         $fieldWrapper->find('label, .label')->text($this->labelText);
-        $field = $fieldWrapper->find('input, select, textarea')->val($this->value);
+        $field = $fieldWrapper->find('input, select, textarea')->val($this->value)->attr('name', $this->getName());
         $hint = $this->renderFieldHint();
         $field->after($hint);
-        self::renderAttributes($field, $this->attributes);
-
-        $fieldWrapper->find('*[data-view]')->attr('data-view', $field->name);
+        FormHelper::renderAttributes($field, $this->attributes);
 
         return $fieldWrapper;
     }
@@ -381,12 +444,12 @@ class Field extends AbstractFormComponent
      */
     protected function renderInput()
     {
-        if (in_array($this->type, ['radio', 'textarea', 'select', 'template', 'hidden'])) {
+        if (in_array($this->getType(), ['radio', 'textarea', 'select', 'template', 'hidden'])) {
             return null;
         }
 
-        $field = phpQuery::pq('<input>')->val($this->value);
-        self::renderAttributes($field, $this->attributes);
+        $field = phpQuery::pq('<input>')->val($this->value)->attr('name', $this->getName())->attr('type', $this->getType());
+        FormHelper::renderAttributes($field, $this->attributes);
 
         return $field;
     }
@@ -400,7 +463,7 @@ class Field extends AbstractFormComponent
      */
     protected function renderHidden()
     {
-        if ($this->type === 'hidden') {
+        if ($this->getType() === 'hidden') {
             return null;
         }
 
@@ -408,8 +471,8 @@ class Field extends AbstractFormComponent
             $this->value = [$this->value];
         }
 
-        $field = phpQuery::pq('<input>');
-        self::renderAttributes($field, $this->attributes);
+        $field = phpQuery::pq('<input>')->attr('name', $this->getName())->attr('type', 'hidden');
+        FormHelper::renderAttributes($field, $this->attributes);
 
         $field->val(array_shift($this->value));
         foreach ($this->value as $value) {
@@ -457,8 +520,8 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        $field = phpQuery::pq('<textarea>')->val($this->value);
-        self::renderAttributes($field, $this->attributes);
+        $field = phpQuery::pq('<textarea>')->val($this->value)->attr('name', $this->getName());
+        FormHelper::renderAttributes($field, $this->attributes);
 
         return $field;
     }

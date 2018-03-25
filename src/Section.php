@@ -2,7 +2,9 @@
 
 namespace avtomon;
 
-class SectionException extends \Exception
+use phpQuery;
+
+class SectionException extends CustomException
 {
 }
 

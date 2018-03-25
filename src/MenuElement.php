@@ -2,7 +2,9 @@
 
 namespace avtomon;
 
-class MenuElementException extends \Exception
+use phpQuery;
+
+class MenuElementException extends CustomException
 {
 }
 
@@ -87,7 +89,7 @@ class MenuElement extends AbstractFormComponent
      */
     public function render()
     {
-        $menuEl = phpQuery::pq("<{$this->tag}>")->html($this->text);
+        $menuEl = phpQuery::pq("<{$this->tag}>")->text($this->text);
         FormHelper::renderAttributes($menuEl, $this->attributes);
 
         return $menuEl;

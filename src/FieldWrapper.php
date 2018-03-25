@@ -2,7 +2,9 @@
 
 namespace avtomon;
 
-class FieldWrapperException extends \Exception
+use phpQuery;
+
+class FieldWrapperException extends CustomException
 {
 }
 

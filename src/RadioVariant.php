@@ -2,7 +2,9 @@
 
 namespace avtomon;
 
-class RadioVariantException extends \Exception
+use phpQuery;
+
+class RadioVariantException extends CustomException
 {
 }
 
@@ -56,10 +58,10 @@ class RadioVariant extends AbstractFormComponent
      */
     public function render()
     {
-        $field = phpQuery::pq('<input>')->attr('type', 'radio');
-        $label = phpQuery::pq('<input>')->text($this->labelText);
+        $field = phpQuery::pq('<input>')->attr('type', 'radio')->attr('name', $this->name);
+        $label = phpQuery::pq('<label>')->text($this->labelText);
         $field->after($label);
-        self::renderAttributes($label, $this->attributes, ['type']);
+        FormHelper::renderAttributes($label, $this->attributes, ['type']);
 
         return $field;
     }
