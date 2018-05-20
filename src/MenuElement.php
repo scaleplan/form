@@ -89,7 +89,9 @@ class MenuElement extends AbstractFormComponent
      */
     public function render()
     {
-        $menuEl = phpQuery::pq("<{$this->tag}>")->text($this->text);
+        $menuEl = phpQuery::pq("<{$this->tag}>")
+            ->text($this->text)
+            ->attr('href', $this->hash);
         FormHelper::renderAttributes($menuEl, $this->attributes);
 
         return $menuEl;

@@ -17,9 +17,11 @@ class Field extends AbstractFormComponent
      */
     protected static $settings = [
         'type' => 'text',
-        'templatePath' => '/views/private/forms',
+        'templatePath' => '/views/private/forms/templates',
         'hintHTML' => '<i class="material-icons tooltipped" data-position="right" data-delay="50" data-tooltip="I am a tooltip">info_outline</i>',
-        'hintAttribute' => 'data-tooltip'
+        'hintSelector' => '.material-icons.tooltipped',
+        'hintAttribute' => 'data-tooltip',
+        'labelAfter' => true
     ];
 
     /**
@@ -32,7 +34,6 @@ class Field extends AbstractFormComponent
         'radio',
         'password',
         'file',
-        'template',
         'date',
         'datetime',
         'color',
@@ -101,7 +102,7 @@ class Field extends AbstractFormComponent
      *
      * @var string
      */
-    protected $templatePath = '/views/private/forms';
+    protected $templatePath = '/views/private/forms/templates';
 
     /**
      * Имя файла шаблона поля
@@ -123,6 +124,13 @@ class Field extends AbstractFormComponent
      * @var string
      */
     protected $hintHTML = '';
+
+    /**
+     * Селектор, по которому можно будет найти элемент подсказки в шаблоне
+     *
+     * @var string
+     */
+    protected $hintSelector = '';
 
     /**
      * В какой атрибудт вставлять текст подсказки
@@ -153,6 +161,13 @@ class Field extends AbstractFormComponent
     protected $selectedValue = '';
 
     /**
+     * phpQuery-объект шаблона поля
+     *
+     * @var null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     */
+    protected $renderedTemplate = null;
+
+    /**
      * Конструктор
      *
      * @param array $settings - настройки объекта
@@ -162,19 +177,15 @@ class Field extends AbstractFormComponent
     public function __construct(array $settings)
     {
         if (empty($settings['type'])) {
-            throw new FieldException('Не задан тип поля');
+            $settings['type'] = 'input';
         }
 
         if (empty($settings['name'])) {
             throw new FieldException('Не задано имя поля');
         }
 
-        if (empty($settings['labelText'])) {
-            throw new FieldException('Не задан текст метки поля');
-        }
-
         if (!empty($settings['fieldWrapper'])) {
-            $settings['fieldWrapper'] = new FieldWrapper($settings['fieldWrapper']);
+            $settings['fieldWrapper'] = new FieldWrapper($settings['fieldWrapper'] + ['required' => $field['required'] ?? '']);
         }
 
         if (!empty($settings['options']) && is_array($settings['options'])) {
@@ -217,7 +228,7 @@ class Field extends AbstractFormComponent
             return;
         }
 
-        if (!preg_match('/.+\.' . self::TEMPLATE_EXTENSION . '$/')) {
+        if (!preg_match('/.+\.' . self::TEMPLATE_EXTENSION . '$/', $template)) {
             $template = "$template." . self::TEMPLATE_EXTENSION;
         }
 
@@ -309,7 +320,7 @@ class Field extends AbstractFormComponent
      */
     public function setEmptyText($emptyText)
     {
-        $this->emptyText = (string) $emptyText;
+        $this->emptyText = $emptyText;
     }
 
     /**
@@ -329,7 +340,7 @@ class Field extends AbstractFormComponent
      */
     public function setSelectedValue($selectedValue)
     {
-        $this->selectedValue = (string) $selectedValue;
+        $this->selectedValue = $selectedValue;
     }
 
     /**
@@ -363,6 +374,18 @@ class Field extends AbstractFormComponent
     }
 
     /**
+     * Вернуть значение атрибута, если такой есть
+     *
+     * @param string $name - имя искомого атрибута
+     *
+     * @return mixed
+     */
+    public function getAttribute(string $name)
+    {
+        return $this->attributes[$name] ?? null;
+    }
+
+    /**
      * Отрендерить поле выпадающего списка
      *
      * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
@@ -375,13 +398,19 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        $field = phpQuery::pq('<select>')->val($this->value)->attr('name', $this->getName());
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find('select') : phpQuery::pq('<select>'))) {
+            return null;
+        }
+
+        $field->val($this->value)->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
-        array_unshift($this->options, new Option(['text' => $this->emptyText]));
+        if (!is_null($this->emptyText)) {
+            array_unshift($this->options, new Option(['text' => $this->emptyText]));
+        }
 
         foreach($this->options as $option) {
-            if ($this->selectedValue === $option->getValue() || $this->selectedValue === $option->getText()) {
+            if (!is_null($this->selectedValue) && ($this->selectedValue === $option->getValue() || $this->selectedValue === $option->getText())) {
                 $option->addAttribute('selected', 'selected');
             }
 
@@ -404,7 +433,33 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        return phpQuery::pq($this->hintHTML)->attr($this->hintAttribute, $this->hint);
+        if (!($hint = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find($this->hintSelector) : phpQuery::pq($this->hintHTML))) {
+            return null;
+        }
+
+        return $hint->attr($this->hintAttribute, $this->hint);
+    }
+
+    /**
+     * Рендеринг метки поля
+     *
+     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     *
+     * @throws \Exception
+     */
+    protected function renderLabel($label = null)
+    {
+        if (empty($this->labelText)) {
+            return null;
+        }
+
+        if (!($label = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find('label') : phpQuery::pq('<label>'))) {
+            return null;
+        }
+
+        return $label
+            ->text($this->labelText)
+            ->attr('for', $this->attributes['id']);
     }
 
     /**
@@ -415,24 +470,20 @@ class Field extends AbstractFormComponent
      * @throws FieldException
      * @throws \Exception
      */
-    protected function renderTemplate()
+    public function getRenderedTemplate()
     {
-        if ($this->getType() !== 'template') {
-            return null;
+        if (!is_null($this->renderedTemplate)) {
+            return $this->renderedTemplate;
         }
 
         if (empty($this->templatePath) || empty($this->template)) {
-            throw new FieldException('Не задан путь к шаблонам полей или имя шаблона');
+            return $this->renderedTemplate = false;
         }
 
-        $fieldWrapper = phpQuery::pq(file_get_contents($this->templatePath . '/' . $this->template));
-        $fieldWrapper->find('label, .label')->text($this->labelText);
-        $field = $fieldWrapper->find('input, select, textarea')->val($this->value)->attr('name', $this->getName());
-        $hint = $this->renderFieldHint();
-        $field->after($hint);
-        FormHelper::renderAttributes($field, $this->attributes);
+        $this->renderedTemplate = phpQuery::newDocumentFileHTML($_SERVER['DOCUMENT_ROOT'] . $this->templatePath . '/' . $this->template);
+        $this->renderedTemplate->find('*[data-view]')->attr('data-view', $this->name);
 
-        return $fieldWrapper;
+        return $this->renderedTemplate;
     }
 
     /**
@@ -444,11 +495,18 @@ class Field extends AbstractFormComponent
      */
     protected function renderInput()
     {
-        if (in_array($this->getType(), ['radio', 'textarea', 'select', 'template', 'hidden'])) {
+        if (in_array($this->getType(), ['radio', 'textarea', 'select', 'hidden'])) {
             return null;
         }
 
-        $field = phpQuery::pq('<input>')->val($this->value)->attr('name', $this->getName())->attr('type', $this->getType());
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='{$this->getType()}']") : phpQuery::pq('<input>')->attr('type', $this->getType()))) {
+            return null;
+        }
+
+        $field
+            ->val($this->value)
+            ->attr('name', $this->getName());
+
         FormHelper::renderAttributes($field, $this->attributes);
 
         return $field;
@@ -463,7 +521,11 @@ class Field extends AbstractFormComponent
      */
     protected function renderHidden()
     {
-        if ($this->getType() === 'hidden') {
+        if ($this->getType() !== 'hidden') {
+            return null;
+        }
+
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='hidden']") : phpQuery::pq('<input>')->attr('type', 'hidden'))) {
             return null;
         }
 
@@ -471,7 +533,8 @@ class Field extends AbstractFormComponent
             $this->value = [$this->value];
         }
 
-        $field = phpQuery::pq('<input>')->attr('name', $this->getName())->attr('type', 'hidden');
+        $field->attr('name', $this->getName());
+
         FormHelper::renderAttributes($field, $this->attributes);
 
         $field->val(array_shift($this->value));
@@ -495,16 +558,19 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        $radio = array_shift($this->variants)->render();
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='radio']") : array_shift($this->variants)->render())) {
+            return null;
+        }
+
         foreach ($this->variants as $variant) {
             if ($variant->getValue() === $this->value) {
                 $variant->addAttribute('checked', 'checked');
             }
 
-            $radio->after($variant->render());
+            $field->after($variant->render());
         }
 
-        return $radio;
+        return $field;
     }
 
     /**
@@ -520,7 +586,11 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        $field = phpQuery::pq('<textarea>')->val($this->value)->attr('name', $this->getName());
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("textarea") : phpQuery::pq('<textarea>'))) {
+            return null;
+        }
+
+        $field->val($this->value)->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
         return $field;
@@ -553,16 +623,41 @@ class Field extends AbstractFormComponent
                 $field = $this->renderTemplate();
                 break;
 
+            case 'hidden':
+                return $this->renderHidden();
+
             default:
                 $field = $this->renderInput();
         }
 
-        if ($this->fieldWrapper) {
-            $fieldWrapper = $this->fieldWrapper->render();
-            $fieldWrapper->append($field);
-            return $fieldWrapper;
+        $label = $this->renderLabel();
+        $hint = $this->renderFieldHint();
+
+        if ($this->getRenderedTemplate()) {
+            return $this->getRenderedTemplate();
         }
 
-        return $field;
+        if (!empty(self::$settings['labelAfter']))
+            $elements = [&$field, &$hint, &$label];
+        else {
+            $elements = [&$label, &$field, &$hint];
+        }
+
+        if (!$this->fieldWrapper) {
+            $object = phpQuery::pq('<div>');
+            foreach ($elements as $el) {
+                $object->append($el);
+            }
+
+            return $object;
+        }
+
+        $fieldWrapper = $this->fieldWrapper->render();
+
+        foreach ($elements as $el) {
+            $fieldWrapper->append($el);
+        }
+
+        return $fieldWrapper;
     }
 }

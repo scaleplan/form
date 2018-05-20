@@ -26,6 +26,10 @@ class Button extends AbstractFormComponent
      */
     public function __construct(array $settings)
     {
+        if (empty($settings['type'])) {
+            $settings['type'] = 'button';
+        }
+
         parent::__construct($settings);
     }
 

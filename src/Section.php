@@ -47,9 +47,9 @@ class Section extends AbstractFormComponent
      */
     public function __construct(array $settings)
     {
-        if (empty($settings['title'])) {
+        /*if (empty($settings['title'])) {
             throw new SectionException('Не задан текст кнопки');
-        }
+        }*/
 
         if (!empty($settings['fields']) && is_array($settings['fields'])) {
             foreach ($settings['fields'] as &$field) {
@@ -59,7 +59,7 @@ class Section extends AbstractFormComponent
 
         if (!empty($settings['buttons']) && is_array($settings['buttons'])) {
             foreach ($settings['buttons'] as &$button) {
-                $button = new Field($button);
+                $button = new Button($button);
             }
         }
 
@@ -73,12 +73,13 @@ class Section extends AbstractFormComponent
      */
     public function setFields(array $fields)
     {
+        $this->fields = [];
         foreach ($fields as $field) {
             if (!($field instanceof Field)) {
                 continue;
             }
 
-            $this->fields[$field->getName()] = $field;
+            $this->fields[] = $field;
         }
     }
 
@@ -89,17 +90,17 @@ class Section extends AbstractFormComponent
      */
     public function addField(Field $field)
     {
-        $this->fields[$field->getName()] = $field;
+        $this->fields[] = $field;
     }
 
     /**
      * Удалить поле раздела по имени
      *
-     * @param string $name - имя поля
+     * @param Field $field - удаляемое поле
      */
-    public function deleteField(string $name)
+    public function deleteField(Field $field)
     {
-        unset($this->fields[$name]);
+        unset($this->fields[array_search($field, $this->fields)]);
     }
 
     /**
@@ -145,7 +146,7 @@ class Section extends AbstractFormComponent
      */
     public function render()
     {
-        $formSection = phpQuery::pq('<section>');
+        $formSection = phpQuery::pq('<section>')->attr('id', $this->id);
         FormHelper::renderAttributes($formSection, $this->attributes);
 
         foreach ($this->fields as $field) {

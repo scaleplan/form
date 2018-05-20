@@ -10,7 +10,17 @@ class FormException extends CustomException
 
 class Form
 {
+    /**
+     * Трейт инициализации
+     */
     use InitTrait;
+
+    /**
+     * В какой раздел добавлять дополнительно сгенерированные поля формы
+     *
+     * @const int
+     */
+    const ADDITIONAL_FIELDS_SECTION_NUMBER = 0;
 
     /**
      * Конфигурация формы
@@ -104,6 +114,13 @@ class Form
     protected $fields = [];
 
     /**
+     * Дополнительно сгенерированные поля формы
+     *
+     * @var array
+     */
+    protected $additionalFields = [];
+
+    /**
      * Конструктор
      *
      * @param array $formConf - параметры конфигурации
@@ -115,7 +132,8 @@ class Form
         $this->formConf = &$formConf;
 
         if (!empty($formConf['sections']) && is_array($formConf['sections'])) {
-            foreach ($settings['sections'] as &$section) {
+            foreach ($formConf['sections'] as &$section) {
+                $section['buttons'] = array_merge($formConf['buttons'] ?? [], $section['buttons'] ?? []);
                 $section = new Section($section);
             }
         } else if (!empty($formConf['fields']) && is_array($formConf['fields'])) {
@@ -176,7 +194,7 @@ class Form
                 continue;
             }
 
-            $this->fields[$field->getName()] = $field;
+            $this->fields[] = $field;
         }
     }
 
@@ -205,6 +223,11 @@ class Form
             $title->after($menu);
 
             foreach($this->sections as $title => $section) {
+                if ($title === array_keys($this->sections)[self::ADDITIONAL_FIELDS_SECTION_NUMBER]) {
+                    $section = clone $section;
+                    $section->setFields(array_merge($this->additionalFields, $section->getFields()));
+                }
+
                 $form->append($section->render());
                 $menu->append((new MenuElement(['text' => $title, 'hash' => $section->getId() ? '#' . $section->getId() : '']))->render());
             }
@@ -230,16 +253,16 @@ class Form
      *
      * @return $this
      */
-    public function setFormValues(array $valuesObject)
+    public function setFormValues(array $valuesObject): Form
     {
         foreach ($this->sections as $section) {
-            foreach ($section->getFields() as $name => $field) {
+            foreach ($section->getFields() as $field) {
+                $name = rtrim($field->getName(), '[]');
                 if (!array_key_exists($name, $valuesObject)) {
                     continue;
                 }
 
-                if ($field->getType() === 'file') {
-                    $this->setFileValue($name, $valuesObject[$name]);
+                if ($this->setFileValue($field, $valuesObject[$name])) {
                     continue;
                 }
 
@@ -258,10 +281,14 @@ class Form
      *
      * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      */
-    protected function setImageValue(string $name, string $value)
+    protected function setImageValue(Field $field, string $value)
     {
-        if (!((string) $element = $this->form->find("img[data-view='$name']"))) {
-            return;
+        if ($field->getType() !== 'file' || !$value) {
+            return null;
+        }
+
+        if (!$field->getRenderedTemplate() || !((string) $element = $field->getRenderedTemplate()->find("img[data-view='{$field->getName()}']"))) {
+            return null;
         }
 
         $element->attr('src', $value);
@@ -277,14 +304,24 @@ class Form
      *
      * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      */
-    protected function setFileValue(string $name, $value)
+    protected function setFileValue(Field $field, $value): ?Field
     {
-        if (!is_array($value)) {
-            $value = [$value];
-        } else {
-            $name = "{$name}[]";
+        if ($field->getType() !== 'file' || !$value) {
+            return null;
         }
 
+        $name = $field->getName();
+
+        if (!is_array($value)) {
+            if ($this->setImageValue($field, $value)) {
+                return $field;
+            }
+
+            $value = [$value];
+        }
+
+        $newField = $field;
+        $field->getRenderedTemplate() && $dataView = $field->getRenderedTemplate()->find("*[data-view='{$field->getName()}']");
         foreach ($value as $file) {
             if (empty($file[$this->filePathKey])) {
                 continue;
@@ -292,21 +329,37 @@ class Form
 
             $file[$this->filePosterKey] = $file[$this->filePosterKey] ?? '';
 
-            $field = [
-                'type' => 'hidden',
-                'name' => $this->fileNamePrefix . $name,
-                'data-poster' => $file[$this->filePosterKey],
-                'data-name' => $file[$this->fileNameKey],
-                'value' => $file[$this->filePathKey]
-            ];
+            $newField = new Field(
+                [
+                    'type' => 'hidden',
+                    'name' => $this->fileNamePrefix . $name,
+                    'data-poster' => $file[$this->filePosterKey],
+                    'data-name' => $file[$this->fileNameKey],
+                    'value' => $file[$this->filePathKey]
+                ]
+            );
 
-            $this->sections[0]->addField(new Field($field));
+            $this->additionalFields[] = $newField;
+
+            if ($dataView) {
+                $clone = $dataView->clone()
+                    ->removeClass('no-image')
+                    ->attr('src', $file[$this->filePosterKey])
+                    ->attr('data-object-src', $file[$this->filePathKey])
+                    ->attr('title', $file[$this->fileNameKey])
+                    ->attr('data-type', $field->getAttribute('data-type') ?: '');
+
+                $dataView->after($clone);
+                if ($dataView->hasClass('no-image')) {
+                    $dataView->addClass('no-display');
+                }
+
+                $dataView = $clone;
+            }
         }
 
-        return $field;
+        return $newField;
     }
-
-
 
     /**
      * Установить опции для выпадающего списка
@@ -314,13 +367,16 @@ class Form
      * @param string $selectName - имя списка
      * @param array $options - элементы списка
      */
-    public function setSelectOptions(string $selectName, array $options, $emptyText = '', $selectedValue = '')
+    public function setSelectOptions(string $selectName, array $options, $emptyText = null, $selectedValue = null): ?Field
     {
-        $search = function (array &$fields) use (&$selectName, &$options, &$emptyText, &$selectedValue) {
-            foreach ($fields as $name => $field) {
-                if ($name !== $selectName) {
+        $search = function (array $fields) use (&$selectName, &$options, &$emptyText, &$selectedValue): ?Field {
+            $result = null;
+            foreach ($fields as &$field) {
+                if ($field->getName() !== $selectName) {
                     continue;
                 }
+
+                $result = $field;
 
                 $field->setEmptyText($emptyText);
                 $field->setSelectedValue($selectedValue);
@@ -329,13 +385,20 @@ class Form
                     $field->addOption($option);
                 }
             }
+
+            return $result;
         };
 
-        foreach ($this->sections as $section) {
-            $search($section->getFields());
+        if ($this->sections) {
+            $result = null;
+            foreach ($this->sections as $section) {
+                $result = $search($section->getFields());
+            }
+
+            return $result;
         }
 
-        $search($this->fields);
+        return $search($this->fields);
     }
 
     /**
@@ -370,8 +433,23 @@ class Form
         return $this->render();
     }
 
+    /**
+     * Вернуть текст заголовка формы
+     *
+     * @return string
+     */
     public function getTitleText(): string
     {
         return $this->title['text'] ?? '';
+    }
+
+    /**
+     * Установка текста заголовка формы
+     *
+     * @param string $newText
+     */
+    public function setTitleText(string $newText): void
+    {
+        $this->title['text'] = $newText;
     }
 }
