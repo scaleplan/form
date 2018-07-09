@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ * Класс ошибки
+ *
+ * Class FormException
+ * @package avtomon
+ */
 class FormException extends CustomException
 {
 }
 
+/**
+ * Класс формы
+ *
+ * Class Form
+ * @package avtomon
+ */
 class Form
 {
     /**
@@ -20,7 +32,7 @@ class Form
      *
      * @const int
      */
-    const ADDITIONAL_FIELDS_SECTION_NUMBER = 0;
+    protected const ADDITIONAL_FIELDS_SECTION_NUMBER = 0;
 
     /**
      * Конфигурация формы
@@ -125,21 +137,27 @@ class Form
      *
      * @param array $formConf - параметры конфигурации
      *
-     * @throws FormException
+     * @throws FieldException
+     * @throws VariantException
+     * @throws \ReflectionException
      */
     public function __construct(array $formConf)
     {
         $this->formConf = &$formConf;
 
-        if (!empty($formConf['sections']) && is_array($formConf['sections'])) {
+        if (!empty($formConf['sections']) && \is_array($formConf['sections'])) {
             foreach ($formConf['sections'] as &$section) {
                 $section['buttons'] = array_merge($formConf['buttons'] ?? [], $section['buttons'] ?? []);
                 $section = new Section($section);
             }
-        } else if (!empty($formConf['fields']) && is_array($formConf['fields'])) {
+
+            unset($section);
+        } else if (!empty($formConf['fields']) && \is_array($formConf['fields'])) {
             foreach ($formConf['fields'] as &$field) {
                 $field = new Field($field);
             }
+
+            unset($field);
         }
 
         $this->initObject($formConf);
@@ -150,7 +168,7 @@ class Form
      *
      * @param array $form - настройки формы
      */
-    public function setForm(array $form)
+    public function setForm(array $form): void
     {
         $form['method'] = 'POST';
         $this->form = $form;
@@ -161,7 +179,7 @@ class Form
      *
      * @param array $sections
      */
-    public function setSections(array $sections)
+    public function setSections(array $sections): void
     {
         foreach ($sections as $section) {
             if (!($section instanceof Section)) {
@@ -177,9 +195,71 @@ class Form
      *
      * @param Section $section
      */
-    public function addSection(Section $section)
+    public function addSection(Section $section): void
     {
         $this->sections[$section->getTitle()] = $section;
+    }
+
+    /**
+     * Добавить поле к форме
+     *
+     * @param Field $field - добавляемое поле
+     * @param int $sectionNumber - номер раздела формы, в который добавлять поле
+     * @param bool $isAppend - добавлять поле в конец и в начала раздела
+     *
+     * @return Form
+     *
+     * @throws FormException
+     */
+    public function addField(Field $field, int $sectionNumber = -1, bool $isAppend = true): Form
+    {
+        if ($this->sections) {
+            if ($sectionNumber === -1) {
+                $sectionNumber = \count($this->sections) - 1;
+            }
+
+            if (empty(array_keys($this->sections)[$sectionNumber])) {
+                throw new FormException('Задан неверный индекст раздела формы');
+            }
+
+            $section = $this->sections[array_keys($this->sections)[$sectionNumber]];
+            $isAppend ? $section->appendField($field) : $section->prependField($field);
+            return $this;
+        }
+
+        $isAppend ? array_push($this->fields, $field) : array_unshift($this->fields, $field);
+
+        return $this;
+    }
+
+    /**
+     * Добавить поле к форме в конец раздела
+     *
+     * @param Field $field - добавляемое поле
+     * @param int $sectionNumber - номер раздела формы, в который добавлять поле
+     *
+     * @return Form
+     *
+     * @throws FormException
+     */
+    public function appendField(Field $field, int $sectionNumber = -1): Form
+    {
+        return $this->addField($field, $sectionNumber);
+    }
+
+    /**
+     * Добавить поле к форме в начало раздела
+     *
+     * @param Field $field - добавляемое поле
+     * @param int $sectionNumber - номер раздела формы, в который добавлять поле
+     *
+     * @return Form
+     *
+     * @throws FormException
+     */
+    public function prependField(Field $field, int $sectionNumber = -1): Form
+    {
+        return $this->addField($field, $sectionNumber, false);
     }
 
     /**
@@ -187,7 +267,7 @@ class Form
      *
      * @param array $fields
      */
-    public function setFields(array $fields)
+    public function setFields(array $fields): void
     {
         foreach ($fields as $field) {
             if (!($field instanceof Field)) {
@@ -201,7 +281,7 @@ class Form
     /**
      * Превратить форму в HTML-разметку
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
      *
      * @throws \Exception
      */
@@ -251,9 +331,11 @@ class Form
      *
      * @param array $valuesObject - массив значений в формате <имя поля> => <значение>
      *
-     * @return $this
+     * @throws FieldException
+     * @throws VariantException
+     * @throws \ReflectionException
      */
-    public function setFormValues(array $valuesObject): Form
+    public function setFormValues(array $valuesObject): void
     {
         foreach ($this->sections as $section) {
             foreach ($section->getFields() as $field) {
@@ -269,21 +351,20 @@ class Form
                 $field->setValue($valuesObject[$name]);
             }
         }
-
-        return $this;
     }
 
     /**
      * Вставка изображений
      *
-     * @param string $name - имя элемента для отображения картинки
+     * @param Field $field - поле-эталон
      * @param $value - изображение или массив изображений
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @throws \Exception
      */
     protected function setImageValue(Field $field, string $value)
     {
-        if ($field->getType() !== 'file' || !$value) {
+        if (!$value || $field->getType() !== 'file') {
             return null;
         }
 
@@ -299,20 +380,25 @@ class Form
     /**
      * Вставка изображений
      *
-     * @param string $name - имя элемента для отображения картинки
+     * @param Field $field - поле-эталон
      * @param $value - изображение или массив изображений
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return Field|null
+     *
+     * @throws FieldException
+     * @throws VariantException
+     * @throws \ReflectionException
+     * @throws \Exception
      */
     protected function setFileValue(Field $field, $value): ?Field
     {
-        if ($field->getType() !== 'file' || !$value) {
+        if (!$value || $field->getType() !== 'file') {
             return null;
         }
 
         $name = $field->getName();
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             if ($this->setImageValue($field, $value)) {
                 return $field;
             }
@@ -321,7 +407,10 @@ class Form
         }
 
         $newField = $field;
-        $field->getRenderedTemplate() && $dataView = $field->getRenderedTemplate()->find("*[data-view='{$field->getName()}']");
+        if (!$field->getRenderedTemplate() || !((string) $dataView = $field->getRenderedTemplate()->find("*[data-view='{$field->getName()}']"))) {
+            return null;
+        }
+
         foreach ($value as $file) {
             if (empty($file[$this->filePathKey])) {
                 continue;
@@ -333,8 +422,8 @@ class Form
                 [
                     'type' => 'hidden',
                     'name' => $this->fileNamePrefix . $name,
-                    'data-poster' => $file[$this->filePosterKey],
-                    'data-name' => $file[$this->fileNameKey],
+                    //'data-poster' => $file[$this->filePosterKey],
+                    //'data-name' => $file[$this->fileNameKey],
                     'value' => $file[$this->filePathKey]
                 ]
             );
@@ -347,7 +436,8 @@ class Form
                     ->attr('src', $file[$this->filePosterKey])
                     ->attr('data-object-src', $file[$this->filePathKey])
                     ->attr('title', $file[$this->fileNameKey])
-                    ->attr('data-type', $field->getAttribute('data-type') ?: '');
+                    ->attr('data-type', $field->getAttribute('data-type') ?: '')
+                    ->attr('data-source', $this->fileNamePrefix . $name);
 
                 $dataView->after($clone);
                 if ($dataView->hasClass('no-image')) {
@@ -366,6 +456,10 @@ class Form
      *
      * @param string $selectName - имя списка
      * @param array $options - элементы списка
+     * @param null $emptyText - текст пустого пункта
+     * @param null $selectedValue - элемент по умолчанию
+     *
+     * @return Field|null
      */
     public function setSelectOptions(string $selectName, array $options, $emptyText = null, $selectedValue = null): ?Field
     {
@@ -405,8 +499,6 @@ class Form
      * Установить параметр action формы
      *
      * @param string $newAction - новое значение action
-     *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
      */
     public function setFormAction(string $newAction): void
     {
@@ -427,10 +519,12 @@ class Form
      * Вернуть объект в виде строки
      *
      * @return string
+     *
+     * @throws \Exception
      */
     public function __toString(): string
     {
-        return $this->render();
+        return (string) $this->render();
     }
 
     /**

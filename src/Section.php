@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ * Класс ошибок
+ *
+ * Class SectionException
+ * @package avtomon
+ */
 class SectionException extends CustomException
 {
 }
 
+/**
+ * Класс разделов формы
+ *
+ * Class Section
+ * @package avtomon
+ */
 class Section extends AbstractFormComponent
 {
     /**
@@ -43,7 +55,9 @@ class Section extends AbstractFormComponent
      *
      * @param array $settings - настройки объекта
      *
-     * @throws SectionException
+     * @throws FieldException
+     * @throws VariantException
+     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -51,16 +65,20 @@ class Section extends AbstractFormComponent
             throw new SectionException('Не задан текст кнопки');
         }*/
 
-        if (!empty($settings['fields']) && is_array($settings['fields'])) {
+        if (!empty($settings['fields']) && \is_array($settings['fields'])) {
             foreach ($settings['fields'] as &$field) {
                 $field = new Field($field);
             }
+
+            unset($field);
         }
 
-        if (!empty($settings['buttons']) && is_array($settings['buttons'])) {
+        if (!empty($settings['buttons']) && \is_array($settings['buttons'])) {
             foreach ($settings['buttons'] as &$button) {
                 $button = new Button($button);
             }
+
+            unset($button);
         }
 
         parent::__construct($settings);
@@ -71,7 +89,7 @@ class Section extends AbstractFormComponent
      *
      * @param array $fields - список полей
      */
-    public function setFields(array $fields)
+    public function setFields(array $fields): void
     {
         $this->fields = [];
         foreach ($fields as $field) {
@@ -87,10 +105,31 @@ class Section extends AbstractFormComponent
      * Добавить поле к разделу
      *
      * @param Field $field - объект поля
+     * @param bool $isAppend - добавлять поле в конец и в начала раздела
      */
-    public function addField(Field $field)
+    public function addField(Field $field, bool $isAppend = true): void
     {
-        $this->fields[] = $field;
+        $isAppend ? array_push($this->fields, $field) : array_unshift($this->fields, $field);
+    }
+
+    /**
+     * Добавить поле в конец раздела
+     *
+     * @param Field $field - объект поля
+     */
+    public function appendField(Field $field): void
+    {
+        $this->addField($field);
+    }
+
+    /**
+     * Добавить поле в начало раздела
+     *
+     * @param Field $field - объект поля
+     */
+    public function prependField(Field $field): void
+    {
+        $this->addField($field, false);
     }
 
     /**
@@ -98,9 +137,9 @@ class Section extends AbstractFormComponent
      *
      * @param Field $field - удаляемое поле
      */
-    public function deleteField(Field $field)
+    public function deleteField(Field $field): void
     {
-        unset($this->fields[array_search($field, $this->fields)]);
+        unset($this->fields[array_search($field, $this->fields, true)]);
     }
 
     /**
@@ -108,7 +147,7 @@ class Section extends AbstractFormComponent
      *
      * @param array $buttons - массив кнопок
      */
-    public function setButtons(array $buttons)
+    public function setButtons(array $buttons): void
     {
         foreach ($buttons as $button) {
             if (!($button instanceof Button)) {
@@ -124,7 +163,7 @@ class Section extends AbstractFormComponent
      *
      * @param Button $button - объект кнопки
      */
-    public function addButton(Button $button)
+    public function addButton(Button $button): void
     {
         $this->buttons[] = $button;
     }
@@ -134,7 +173,7 @@ class Section extends AbstractFormComponent
      *
      * @param string $title - новый заголовок
      */
-    public function setTitle(string $title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -143,6 +182,8 @@ class Section extends AbstractFormComponent
      * Отрендерить раздел формы
      *
      * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     *
+     * @throws \Exception
      */
     public function render()
     {

@@ -2,8 +2,12 @@
 
 namespace avtomon;
 
-use phpQuery;
-
+/**
+ * Класс полезных методов формы
+ *
+ * Class FormHelper
+ * @package avtomon
+ */
 class FormHelper
 {
     /**
@@ -19,7 +23,7 @@ class FormHelper
     {
         unset($attrs['html'], $attrs['text'], $attrs['value'], $attrs['hint']);
         foreach ($attrs as $attr => $value) {
-            if (!is_string($attr) || in_array($attr, $stopAttrs)) {
+            if (!\is_string($attr) || \in_array($attr, $stopAttrs, true)) {
                 continue;
             }
 

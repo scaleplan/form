@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ * Класс ошибки
+ *
+ * Class MenuElementException
+ * @package avtomon
+ */
 class MenuElementException extends CustomException
 {
 }
 
+/**
+ * Класс элементов меню
+ *
+ * Class MenuElement
+ * @package avtomon
+ */
 class MenuElement extends AbstractFormComponent
 {
     /**
@@ -46,6 +58,7 @@ class MenuElement extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws MenuElementException
+     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -63,9 +76,9 @@ class MenuElement extends AbstractFormComponent
      *
      * @throws MenuElementException
      */
-    public function setHash(string $hash)
+    public function setHash(string $hash): void
     {
-        if (!preg_match('/^#[\w\d-]+$/', $hash)) {
+        if (!preg_match('/^#[\w-]+$/', $hash)) {
             throw new MenuElementException('Неверный формат хэша');
         }
 
@@ -77,7 +90,7 @@ class MenuElement extends AbstractFormComponent
      *
      * @param string $text - текст
      */
-    public function setText(string $text)
+    public function setText(string $text): void
     {
         $this->text = strip_tags(trim($text));
     }
@@ -86,6 +99,8 @@ class MenuElement extends AbstractFormComponent
      * Отрендерить элемент меню
      *
      * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     *
+     * @throws \Exception
      */
     public function render()
     {

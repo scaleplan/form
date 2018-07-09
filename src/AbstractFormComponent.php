@@ -2,6 +2,12 @@
 
 namespace avtomon;
 
+/**
+ * Базовый класс компанентов формы
+ *
+ * Class AbstractFormComponent
+ * @package avtomon
+ */
 abstract class AbstractFormComponent
 {
     use InitTrait;
@@ -14,9 +20,11 @@ abstract class AbstractFormComponent
     protected $attributes = [];
 
     /**
-     * Коструктор
+     * Конструктор
      *
      * @param array $settings - настройки объекта
+     *
+     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -28,7 +36,7 @@ abstract class AbstractFormComponent
      *
      * @param array $attributes - массив атрибутов
      */
-    public function setAttributes(array $attributes)
+    public function setAttributes(array $attributes): void
     {
         $this->attributes = array_map(function ($attribute) {
             return (string) $attribute;
@@ -41,7 +49,7 @@ abstract class AbstractFormComponent
      * @param string $name - имя атрибута
      * @param string $value - значение атрибута
      */
-    public function addAttribute(string $name, $value)
+    public function addAttribute(string $name, $value): void
     {
         $this->attributes[$name] = (string) $value;
     }
@@ -51,15 +59,15 @@ abstract class AbstractFormComponent
      * 
      * @return mixed
      */
-    public abstract function render();
+    abstract public function render();
 
     /**
      * Вернуть объект как строку
      *
-     * @return mixed
+     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->render();
+        return (string) $this->render();
     }
 }

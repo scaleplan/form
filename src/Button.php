@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ * Класс ошибок
+ *
+ * Class ButtonException
+ * @package avtomon
+ */
 class ButtonException extends CustomException
 {
 }
 
+/**
+ * Класс кнопки
+ *
+ * Class Button
+ * @package avtomon
+ */
 class Button extends AbstractFormComponent
 {
     /**
@@ -22,7 +34,7 @@ class Button extends AbstractFormComponent
      *
      * @param array $settings - настройки объекта
      *
-     * @throws ButtonException
+     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -38,15 +50,17 @@ class Button extends AbstractFormComponent
      *
      * @param $text - текст
      */
-    public function setText($text)
+    public function setText($text): void
     {
         $this->text = (string) $text;
     }
 
     /**
-     * Отрендерить объект
+     * Отрендерить кнопку
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     *
+     * @throws \Exception
      */
     public function render()
     {

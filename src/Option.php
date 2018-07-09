@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ * Класс ошибки
+ *
+ * Class OptionException
+ * @package avtomon
+ */
 class OptionException extends CustomException
 {
 }
 
+/**
+ * Класс элементов выпадающих списков
+ *
+ * Class Option
+ * @package avtomon
+ */
 class Option extends AbstractFormComponent
 {
     /**
@@ -39,7 +51,7 @@ class Option extends AbstractFormComponent
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -49,7 +61,7 @@ class Option extends AbstractFormComponent
      *
      * @param $value - значение
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = (string) $value;
     }
@@ -59,7 +71,7 @@ class Option extends AbstractFormComponent
      *
      * @param $text - текст
      */
-    public function setText($text)
+    public function setText($text): void
     {
         $this->text = (string) $text;
     }
@@ -68,6 +80,8 @@ class Option extends AbstractFormComponent
      * Отрендерить элемент списка
      *
      * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     *
+     * @throws \Exception
      */
     public function render()
     {

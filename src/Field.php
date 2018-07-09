@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ * Класс ошибок
+ *
+ * Class FieldException
+ * @package avtomon
+ */
 class FieldException extends CustomException
 {
 }
 
+/**
+ * Класс полей формы
+ *
+ * Class Field
+ * @package avtomon
+ */
 class Field extends AbstractFormComponent
 {
     /**
@@ -27,7 +39,7 @@ class Field extends AbstractFormComponent
     /**
      * Доступные виды полей ввода
      */
-    const ALLOWED_TYPES = [
+    protected const ALLOWED_TYPES = [
         'text',
         'select',
         'textarea',
@@ -53,7 +65,7 @@ class Field extends AbstractFormComponent
     /**
      * Расширение файлов шаблонов полей
      */
-    const TEMPLATE_EXTENSION = 'html';
+    protected const TEMPLATE_EXTENSION = 'html';
 
     /**
      * Тип поля
@@ -151,7 +163,7 @@ class Field extends AbstractFormComponent
      *
      * @var null|FieldWrapper
      */
-    protected $fieldWrapper = null;
+    protected $fieldWrapper;
 
     /**
      * Значение выбранного элемента списка по умолчанию
@@ -165,7 +177,7 @@ class Field extends AbstractFormComponent
      *
      * @var null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      */
-    protected $renderedTemplate = null;
+    protected $renderedTemplate;
 
     /**
      * Конструктор
@@ -173,6 +185,8 @@ class Field extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws FieldException
+     * @throws VariantException
+     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -188,16 +202,20 @@ class Field extends AbstractFormComponent
             $settings['fieldWrapper'] = new FieldWrapper($settings['fieldWrapper'] + ['required' => $field['required'] ?? '']);
         }
 
-        if (!empty($settings['options']) && is_array($settings['options'])) {
+        if (!empty($settings['options']) && \is_array($settings['options'])) {
             foreach ($settings['options'] as &$option) {
                 $option = new Option($option);
             }
+
+            unset($option);
         }
 
-        if (!empty($settings['variants']) && is_array($settings['variants'])) {
+        if (!empty($settings['variants']) && \is_array($settings['variants'])) {
             foreach ($settings['variants'] as &$variant) {
-                $variant = new RadioVariant($variant);
+                $variant = new Variant($variant);
             }
+
+            unset($variant);
         }
 
         if (empty($settings['id'])) {
@@ -212,7 +230,7 @@ class Field extends AbstractFormComponent
      *
      * @param FieldWrapper $fieldWrapper - объект обертки
      */
-    public function setFieldWrapper(FieldWrapper $fieldWrapper)
+    public function setFieldWrapper(FieldWrapper $fieldWrapper): void
     {
         $this->fieldWrapper = $fieldWrapper;
     }
@@ -222,7 +240,7 @@ class Field extends AbstractFormComponent
      *
      * @param string $template
      */
-    public function setTemplate(string $template)
+    public function setTemplate(string $template): void
     {
         if (!$template) {
             return;
@@ -242,9 +260,9 @@ class Field extends AbstractFormComponent
      *
      * @throws FieldException
      */
-    public function setType(string $type)
+    public function setType(string $type): void
     {
-        if (!in_array($type, self::ALLOWED_TYPES)) {
+        if (!\in_array($type, self::ALLOWED_TYPES, true)) {
             throw new FieldException("Тип поля $type не поддерживается");
         }
 
@@ -256,7 +274,7 @@ class Field extends AbstractFormComponent
      *
      * @param array $options - список объектов элементов
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         foreach ($options as $option) {
             if (!($option instanceof Option)) {
@@ -272,10 +290,10 @@ class Field extends AbstractFormComponent
      *
      * @param array $variants - список объектов вариантов
      */
-    public function setVariants(array $variants)
+    public function setVariants(array $variants): void
     {
         foreach ($variants as $variant) {
-            if (!($variant instanceof RadioVariant)) {
+            if (!($variant instanceof Variant)) {
                 continue;
             }
 
@@ -284,11 +302,21 @@ class Field extends AbstractFormComponent
     }
 
     /**
+     * Добавить вариант выбора переключателя
+     *
+     * @param Variant $variant - добавляемый вариант
+     */
+    public function addVariant(Variant $variant): void
+    {
+        $this->variants[] = $variant;
+    }
+
+    /**
      * Установить значение поля
      *
      * @param $value - значение
      */
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = (string) $value;
     }
@@ -298,7 +326,7 @@ class Field extends AbstractFormComponent
      *
      * @param $name - имя
      */
-    public function setText($name)
+    public function setText($name): void
     {
         $this->name = (string) $name;
     }
@@ -308,7 +336,7 @@ class Field extends AbstractFormComponent
      *
      * @param $labelText - текст
      */
-    public function setLabelText($labelText)
+    public function setLabelText($labelText): void
     {
         $this->labelText = (string) $labelText;
     }
@@ -318,7 +346,7 @@ class Field extends AbstractFormComponent
      *
      * @param $emptyText - текст
      */
-    public function setEmptyText($emptyText)
+    public function setEmptyText($emptyText): void
     {
         $this->emptyText = $emptyText;
     }
@@ -328,7 +356,7 @@ class Field extends AbstractFormComponent
      *
      * @param string $templatePath - путь
      */
-    public function setTemplatePath(string $templatePath)
+    public function setTemplatePath(string $templatePath): void
     {
         $this->templatePath = $templatePath;
     }
@@ -338,7 +366,7 @@ class Field extends AbstractFormComponent
      *
      * @param $selectedValue - значение
      */
-    public function setSelectedValue($selectedValue)
+    public function setSelectedValue($selectedValue): void
     {
         $this->selectedValue = $selectedValue;
     }
@@ -348,7 +376,7 @@ class Field extends AbstractFormComponent
      *
      * @param Option $option - объект элемента списка
      */
-    public function addOption(Option $option)
+    public function addOption(Option $option): void
     {
         $this->options[] = $option;
     }
@@ -358,7 +386,7 @@ class Field extends AbstractFormComponent
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -368,7 +396,7 @@ class Field extends AbstractFormComponent
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -405,12 +433,12 @@ class Field extends AbstractFormComponent
         $field->val($this->value)->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
-        if (!is_null($this->emptyText)) {
+        if ($this->emptyText !== null) {
             array_unshift($this->options, new Option(['text' => $this->emptyText]));
         }
 
         foreach($this->options as $option) {
-            if (!is_null($this->selectedValue) && ($this->selectedValue === $option->getValue() || $this->selectedValue === $option->getText())) {
+            if ($this->selectedValue !== null && ($this->selectedValue == $option->getValue() || $this->selectedValue == $option->getText())) {
                 $option->addAttribute('selected', 'selected');
             }
 
@@ -443,11 +471,11 @@ class Field extends AbstractFormComponent
     /**
      * Рендеринг метки поля
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      *
      * @throws \Exception
      */
-    protected function renderLabel($label = null)
+    protected function renderLabel()
     {
         if (empty($this->labelText)) {
             return null;
@@ -467,12 +495,11 @@ class Field extends AbstractFormComponent
      *
      * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      *
-     * @throws FieldException
      * @throws \Exception
      */
     public function getRenderedTemplate()
     {
-        if (!is_null($this->renderedTemplate)) {
+        if ($this->renderedTemplate !== null) {
             return $this->renderedTemplate;
         }
 
@@ -495,7 +522,7 @@ class Field extends AbstractFormComponent
      */
     protected function renderInput()
     {
-        if (in_array($this->getType(), ['radio', 'textarea', 'select', 'hidden'])) {
+        if (\in_array($this->getType(), ['radio', 'textarea', 'select', 'hidden'], true)) {
             return null;
         }
 
@@ -529,7 +556,7 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!is_array($this->value)) {
+        if (!\is_array($this->value)) {
             $this->value = [$this->value];
         }
 
@@ -550,15 +577,17 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить переключатель
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     *
+     * @throws \Exception
      */
-    protected function renderRadio()
+    protected function renderSwitch()
     {
-        if ($this->type !== 'radio') {
+        if (!\in_array($this->type, ['radio', 'checkbox'], true)) {
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='radio']") : array_shift($this->variants)->render())) {
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='{$this->type}']") : array_shift($this->variants)->render())) {
             return null;
         }
 
@@ -586,7 +615,7 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("textarea") : phpQuery::pq('<textarea>'))) {
+        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find('textarea') : phpQuery::pq('<textarea>'))) {
             return null;
         }
 
@@ -599,9 +628,8 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить поле
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
      *
-     * @throws FieldException
      * @throws \Exception
      */
     public function render()
@@ -615,12 +643,9 @@ class Field extends AbstractFormComponent
                 $field = $this->renderTextarea();
                 break;
 
+            case 'checkbox':
             case 'radio':
-                $field = $this->renderRadio();
-                break;
-
-            case 'template':
-                $field = $this->renderTemplate();
+                $field = $this->renderSwitch();
                 break;
 
             case 'hidden':
@@ -637,9 +662,9 @@ class Field extends AbstractFormComponent
             return $this->getRenderedTemplate();
         }
 
-        if (!empty(self::$settings['labelAfter']))
+        if (!empty(self::$settings['labelAfter'])) {
             $elements = [&$field, &$hint, &$label];
-        else {
+        } else {
             $elements = [&$label, &$field, &$hint];
         }
 

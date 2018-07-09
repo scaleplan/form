@@ -4,10 +4,22 @@ namespace avtomon;
 
 use phpQuery;
 
+/**
+ *
+ *
+ * Class FieldWrapperException
+ * @package avtomon
+ */
 class FieldWrapperException extends CustomException
 {
 }
 
+/**
+ * Обертка полей формы
+ *
+ * Class FieldWrapper
+ * @package avtomon
+ */
 class FieldWrapper extends AbstractFormComponent
 {
     /**
@@ -29,7 +41,9 @@ class FieldWrapper extends AbstractFormComponent
     /**
      * Отрендерить обертку поля
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     *
+     * @throws \Exception
      */
     public  function render()
     {

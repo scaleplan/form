@@ -1,7 +1,6 @@
 {
     "name": "avtomon/SkaForm",
     "description": "Yet another form builder",
-    "type": "project",
     "minimum-stability": "dev",
     "config": {
         "process-timeout": 1800
