@@ -248,7 +248,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$settings` (`array`) &mdash; - настройки объекта
+    - `$settings` (`array`) - настройки объекта
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FieldException`](../avtomon/FieldException.md)
@@ -263,7 +263,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$fieldWrapper` ([`FieldWrapper`](../avtomon/FieldWrapper.md)) &mdash; - объект обертки
+    - `$fieldWrapper` ([`FieldWrapper`](../avtomon/FieldWrapper.md)) - объект обертки
 - Ничего не возвращает.
 
 ### `setTemplate()` <a name="setTemplate"></a>
@@ -285,7 +285,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$type` (`string`) &mdash; - тип
+    - `$type` (`string`) - тип
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FieldException`](../avtomon/FieldException.md)
@@ -298,7 +298,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$options` (`array`) &mdash; - список объектов элементов
+    - `$options` (`array`) - список объектов элементов
 - Ничего не возвращает.
 
 ### `setVariants()` <a name="setVariants"></a>
@@ -309,7 +309,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$variants` (`array`) &mdash; - список объектов вариантов
+    - `$variants` (`array`) - список объектов вариантов
 - Ничего не возвращает.
 
 ### `addVariant()` <a name="addVariant"></a>
@@ -320,7 +320,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$variant` ([`Variant`](../avtomon/Variant.md)) &mdash; - добавляемый вариант
+    - `$variant` ([`Variant`](../avtomon/Variant.md)) - добавляемый вариант
 - Ничего не возвращает.
 
 ### `setValue()` <a name="setValue"></a>
@@ -331,7 +331,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$value` &mdash; - значение
+    - `$value` - значение
 - Ничего не возвращает.
 
 ### `setText()` <a name="setText"></a>
@@ -342,7 +342,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$name` &mdash; - имя
+    - `$name` - имя
 - Ничего не возвращает.
 
 ### `setLabelText()` <a name="setLabelText"></a>
@@ -353,7 +353,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$labelText` &mdash; - текст
+    - `$labelText` - текст
 - Ничего не возвращает.
 
 ### `setEmptyText()` <a name="setEmptyText"></a>
@@ -364,7 +364,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$emptyText` &mdash; - текст
+    - `$emptyText` - текст
 - Ничего не возвращает.
 
 ### `setTemplatePath()` <a name="setTemplatePath"></a>
@@ -375,7 +375,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$templatePath` (`string`) &mdash; - путь
+    - `$templatePath` (`string`) - путь
 - Ничего не возвращает.
 
 ### `setSelectedValue()` <a name="setSelectedValue"></a>
@@ -386,7 +386,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$selectedValue` &mdash; - значение
+    - `$selectedValue` - значение
 - Ничего не возвращает.
 
 ### `addOption()` <a name="addOption"></a>
@@ -397,7 +397,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$option` ([`Option`](../avtomon/Option.md)) &mdash; - объект элемента списка
+    - `$option` ([`Option`](../avtomon/Option.md)) - объект элемента списка
 - Ничего не возвращает.
 
 ### `getName()` <a name="getName"></a>
@@ -426,7 +426,7 @@ phpQuery-объект шаблона поля
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$name` (`string`) &mdash; - имя искомого атрибута
+    - `$name` (`string`) - имя искомого атрибута
 - Возвращает `mixed` value.
 
 ### `renderSelect()` <a name="renderSelect"></a>

@@ -30,9 +30,9 @@ Class FormHelper
 
 - **public static** method.
 - Может принимать следующий параметр(ы):
-    - `$el` (`phpQueryObject`|`QueryTemplatesParse`|`QueryTemplatesSource`|`QueryTemplatesSourceQuery`) &mdash; - элемент
-    - `$attrs` (`array`) &mdash; - массив атрибутов вида &lt;имя атрибута&gt; =&gt; &lt;значение атрибута&gt;
-    - `$stopAttrs` (`array`) &mdash; - массив имен атрибутов, которые добавлять не надо
+    - `$el` (`phpQueryObject`|`QueryTemplatesParse`|`QueryTemplatesSource`|`QueryTemplatesSourceQuery`) - элемент
+    - `$attrs` (`array`) - массив атрибутов вида &lt;имя атрибута&gt; =&gt; &lt;значение атрибута&gt;
+    - `$stopAttrs` (`array`) - массив имен атрибутов, которые добавлять не надо
 - Может возвращать одно из следующих значений:
     - `phpQueryObject`
     - `QueryTemplatesParse`

@@ -89,7 +89,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$settings` (`array`) &mdash; - настройки объекта
+    - `$settings` (`array`) - настройки объекта
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FieldException`](../avtomon/FieldException.md)
@@ -104,7 +104,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$fields` (`array`) &mdash; - список полей
+    - `$fields` (`array`) - список полей
 - Ничего не возвращает.
 
 ### `addField()` <a name="addField"></a>
@@ -115,8 +115,8 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - объект поля
-    - `$isAppend` (`bool`) &mdash; - добавлять поле в конец и в начала раздела
+    - `$field` ([`Field`](../avtomon/Field.md)) - объект поля
+    - `$isAppend` (`bool`) - добавлять поле в конец и в начала раздела
 - Ничего не возвращает.
 
 ### `appendField()` <a name="appendField"></a>
@@ -127,7 +127,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - объект поля
+    - `$field` ([`Field`](../avtomon/Field.md)) - объект поля
 - Ничего не возвращает.
 
 ### `prependField()` <a name="prependField"></a>
@@ -138,7 +138,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - объект поля
+    - `$field` ([`Field`](../avtomon/Field.md)) - объект поля
 - Ничего не возвращает.
 
 ### `deleteField()` <a name="deleteField"></a>
@@ -149,7 +149,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - удаляемое поле
+    - `$field` ([`Field`](../avtomon/Field.md)) - удаляемое поле
 - Ничего не возвращает.
 
 ### `setButtons()` <a name="setButtons"></a>
@@ -160,7 +160,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$buttons` (`array`) &mdash; - массив кнопок
+    - `$buttons` (`array`) - массив кнопок
 - Ничего не возвращает.
 
 ### `addButton()` <a name="addButton"></a>
@@ -171,7 +171,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$button` ([`Button`](../avtomon/Button.md)) &mdash; - объект кнопки
+    - `$button` ([`Button`](../avtomon/Button.md)) - объект кнопки
 - Ничего не возвращает.
 
 ### `setTitle()` <a name="setTitle"></a>
@@ -182,7 +182,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$title` (`string`) &mdash; - новый заголовок
+    - `$title` (`string`) - новый заголовок
 - Ничего не возвращает.
 
 ### `render()` <a name="render"></a>

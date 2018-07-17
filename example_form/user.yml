@@ -1,0 +1,94 @@
+labelAfter: 1
+invisibleClass: no-display
+currentClass: current
+currentNumber: 0
+
+templatePath: /views/private/forms/templates
+
+title:
+  text: Редактирование профиля пользователя
+
+form:
+  id: main
+  action: /user/update
+  novalidate: novalidate
+  data-redirect: /user/profile
+
+menu:
+  class: z-depth-3
+
+sections:
+  - title: Основное
+    id: main_info
+    fields:
+      - fieldWrapper:
+          class: input-field
+        type: text
+        name: login
+        labelText: Логин
+        data-inputmask: "'mask': 'x{3,}'"
+        required: required
+
+      - fieldWrapper:
+          class: input-field
+        type: email
+        name: email
+        labelText: E-mail
+        data-inputmask: "'alias': 'email'"
+        required: required
+
+      - fieldWrapper:
+          class: input-field
+        type: tel
+        name: phone_number
+        labelText: Номер телефона
+        data-inputmask: "'mask': '+7 (999) 999-99-99'"
+
+    buttons:
+      - text: Вперед
+        class: next
+
+  - title: Карьера
+    id: carrier
+    fields:
+      - fieldWrapper:
+          class: input-field
+        type: select
+        name: education
+        labelText: Образование
+
+      - fieldWrapper:
+          class: input-field
+        type: text
+        name: job_place
+        labelText: Место работы
+
+      - fieldWrapper:
+          class: input-field
+        type: text
+        name: post
+        labelText: Должность
+
+    buttons:
+      - text: Назад
+        class: prev
+
+      - text: Вперед
+        class: next
+
+  - title: Аватар
+    id: avatar
+    fields:
+      - type: file
+        template: thumb_template.html
+        name: image
+        labelText: Загрузить аватар
+        class: 'image thumb'
+
+    buttons:
+      - text: Назад
+        class: prev
+
+buttons:
+  - class: reset
+  - type: submit

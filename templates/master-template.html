@@ -102,11 +102,6 @@
                 margin-left: 0 !important;
             }
 
-            .file-field {
-                margin-bottom: 1rem;
-                /*display: block;*/
-            }
-
             menu {
                 list-style: none;
                 float: left;
@@ -143,17 +138,8 @@
                 display: none;
             }
 
-            div.image > *,
-            div.video > * {
-                max-width: 100%;
-            }
-
             [type="checkbox"]:not(.browser-default) + label {
                 top: -3px;
-            }
-
-            input[name="acronym"] ~ a {
-                display: block;
             }
 
             input:not([type]),
@@ -172,203 +158,9 @@
                 margin-bottom: 0;
             }
 
-            .tooltipped {
-                cursor: pointer;
-                position: absolute;
-                right: -2rem;
-            }
-
-            .material-tooltip {
-                max-width: 30%;
-            }
-
-            .ql-snow.ql-toolbar button,
-            .ql-snow .ql-toolbar button {
-                background-color: white !important;
-            }
-
-            .ql-container {
-                min-height: 10rem;
-            }
-
-            .ql-editor.ql-blank::before {
-                font-size: 1rem;
-                font-style: normal !important;
-                color: #9e9e9e !important;
-            }
-
-            .label {
-                padding-bottom: 2rem;
-                display: block;
-                font-size: 1.2rem;
-            }
-
-            #ok-container {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%) translateX(-50%);
-                left: 50%;
-                font-size: 2rem;
-            }
-
             .input-field > .error {
                 color: red;
                 font-size: 0.85rem;
-            }
-
-            .input-field audio {
-                width: 100%;
-                margin-left: -10px;
-            }
-
-            .input-field audio:before {
-                content: attr(data-title);
-            }
-
-            .material-header + div {
-                display: flex;
-                align-items: center;
-            }
-
-            .material-header + div > audio {
-                flex: 1;
-            }
-
-            .file-header {
-                display: flex;
-                align-content: center;
-                align-items: center;
-            }
-
-            .file-header i,
-            .audio-header i {
-                cursor: pointer;
-            }
-
-            .file-header,
-            .audio-header {
-                margin-bottom: 2rem;
-            }
-
-            .file-header > span:first-child {
-                background-image: url("/public/image/documents.png");
-                min-width: 3rem;
-                background-size: cover;
-                min-height: 3rem;
-                margin-right: 1rem;
-                background-position: 0 -168px;
-            }
-
-            .file-header[data-file-type=pdf] > span:first-child {
-                background-position: 0 0;
-            }
-
-            .file-header[data-file-type=docx] > span:first-child,
-            .file-header[data-file-type=odt] > span:first-child,
-            .file-header[data-file-type=doc] > span:first-child {
-                background-position: 0 -42px;
-            }
-
-            .file-header[data-file-type=pptx] > span:first-child,
-            .file-header[data-file-type=ppt] > span:first-child {
-                background-position: 0 -84px;
-            }
-
-            .file-header[data-file-type=xlsx] > span:first-child,
-            .file-header[data-file-type=ods] > span:first-child,
-            .file-header[data-file-type=xls] > span:first-child {
-                background-position: 0 -126px;
-            }
-
-            .file-header[data-file-type=torrent] > span:first-child {
-                background-position: 0 -503px;
-            }
-
-            .file-header[data-file-type=bmp] > span:first-child,
-            .file-header[data-file-type=tif] > span:first-child,
-            .file-header[data-file-type=png] > span:first-child,
-            .file-header[data-file-type=jpg] > span:first-child,
-            .file-header[data-file-type=jpeg] > span:first-child,
-            .file-header[data-file-type=gif] > span:first-child {
-                background-position: 0 -335px;
-            }
-
-            .file-header[data-file-type=mp3] > span:first-child,
-            .file-header[data-file-type=wav] > span:first-child,
-            .file-header[data-file-type=wma] > span:first-child {
-                background-position: 0 -419px;
-            }
-
-            .file-header[data-file-type=webm] > span:first-child,
-            .file-header[data-file-type=wmv] > span:first-child,
-            .file-header[data-file-type=mov] > span:first-child,
-            .file-header[data-file-type=ts] > span:first-child,
-            .file-header[data-file-type=flv] > span:first-child,
-            .file-header[data-file-type=m4v] > span:first-child,
-            .file-header[data-file-type=mp4] > span:first-child,
-            .file-header[data-file-type=avi] > span:first-child,
-            .file-header[data-file-type=mkv] > span:first-child {
-                background-position: 0 -461px;
-            }
-
-            .file-header[data-file-type=zip] > span:first-child,
-            .file-header[data-file-type=gzip] > span:first-child,
-            .file-header[data-file-type=tar] > span:first-child,
-            .file-header[data-file-type=gz] > span:first-child,
-            .file-header[data-file-type=rar] > span:first-child,
-            .file-header[data-file-type="7z"] > span:first-child {
-                background-position: 0 -545px;
-            }
-
-            .file-header[data-file-type=txt] > span:first-child,
-            .file-header[data-file-type=text] > span:first-child,
-            .file-header[data-file-type=log] > span:first-child,
-            .file-header[data-file-type=ini] > span:first-child,
-            .file-header[data-file-type=sh] > span:first-child,
-            .file-header[data-file-type=conf] > span:first-child {
-                background-position: 0 -294px;
-            }
-
-            .file-header[data-file-type=djvu] > span:first-child {
-                background-position: 0 -252px;
-            }
-
-            .file-header[data-file-type=svg] > span:first-child,
-            .file-header[data-file-type=indd] > span:first-child,
-            .file-header[data-file-type=ai] > span:first-child,
-            .file-header[data-file-type=eps] > span:first-child,
-            .file-header[data-file-type=max] > span:first-child,
-            .file-header[data-file-type=psd] > span:first-child,
-            .file-header[data-file-type=dwg] > span:first-child,
-            .file-header[data-file-type=psd] > span:first-child,
-            .file-header[data-file-type=cdr] > span:first-child,
-            .file-header[data-file-type=psd] > span:first-child,
-            .file-header[data-file-type="3ds"] > span:first-child {
-                background-position: 0 -252px;
-            }
-
-            .file-header[data-file-type=fb2] > span:first-child,
-            .file-header[data-file-type=epub] > span:first-child {
-                background-position: 0 -378px;
-            }
-
-            .file-header > span:first-child + span {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-            }
-
-            .file-header .material-name {
-                margin-left: 4rem;
-            }
-
-            .audio-header {
-                display: flex;
-                align-items: flex-end;
-            }
-
-            .audio-header > div {
-                flex: 1;
             }
 
             nav .input-field label.browser-default {
@@ -398,86 +190,17 @@
                 display: block;
             }
 
-            .ql-container.ql-snow {
-                border-color: #9e9e9e;
-            }
-
-            .modal h4 {
-                font-size: 2rem;
-                display: flex;
-                justify-content: space-between;
-            }
-
-            .modal .modal-footer {
-                padding-left: 24px;
-                padding-right: 24px;
-            }
-
             button:disabled {
                 background-color: #999 !important;
             }
         </style>
     </head>
     <body>
-        <div id="ok-container" class="no-display">Действие успешно завершено</div>
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <h4>
-                    <span>Загрузить ролик с Youtube</span>
-                    <i class="material-icons modal-close">close</i>
-                </h4>
-                <div>
-                    <div class="input-field">
-                        <input type="text" id="youtube-url" data-inputmask="'alias': 'url'" required>
-                        <label for="youtube-url">Ссылка на ролик</label>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="applyYoutube" class="modal-close" data-source="videos[]">Ок</button>
-            </div>
-        </div>
+
     </body>
-    <script src="/vendor/avtomon/materialize/dist/js/materialize.min.js"></script>
-    <link rel="stylesheet" href="/vendor/avtomon/notejs/src/css/note.css">
-    <script src="/vendor/avtomon/notejs/src/jquery/note.js" defer></script>
-    <script src="/public/js/generic.js"></script>
     <script data-confsrc="">
-        'use strict';
 
         document.addEventListener('DOMContentLoaded', function () {
-
-            $('select').material_select();
-
-            let elems = document.getElementById('modal');
-            M.Modal.init(elems, {endingTop: '30%'});
-
-            elems = document.querySelectorAll('select');
-            M.FormSelect.init(elems, options);
-
-            renderEditor('textarea.editor');
-
-            initInputMask();
-
-            initNote({
-                isTranslate: true
-            });
-
-            if ($('input[name="acronym"]').length) {
-                $.getScript('/public/js/acronym-to-form.js');
-            }
-
-            if ($('#city').length) {
-                $.getScript('/public/js/address.suggestions.js');
-            }
-
-            if ($('button.auth, button.reg-user').length) {
-                $.getScript('/public/js/auth-to-form.js');
-            }
-
-            /*if ($('input.image, input.video').length) {
-                $.getScript('/public/js/videoimg-to-form.js');
-            }*/
 
             $.fn.inputError = function (message) {
                 let errorPosEl = $(this).children(':input, i').last(),
@@ -520,84 +243,6 @@
                 return form;
             }
 
-            function addQuillsToForm(form, quills) {
-                if (typeof quills === "undefined") {
-                    return form;
-                }
-
-                for (let field in quills) {
-                    if (!quills.hasOwnProperty(field)) {
-                        continue;
-                    }
-
-                    form.append(field, quills[field].container.firstChild.innerHTML);
-                }
-
-                return form;
-            }
-
-            $('form').keydown(function (event) {
-                if (event.keyCode === 13) {
-                    event.preventDefault();
-                    return false;
-                }
-            }).submit(function () {
-                $(this).find('button[type=submit]').prop('disabled', true);
-                let self = $(this),
-                    formData;
-                $.applyAjax.ajaxSubmit(self, function (form) {
-                    if (form.find('section#auth *:input, section#registration *:input').length) {
-                        showError('Завершите авторизацию или регистрацию');
-                        return false;
-                    }
-
-                    if (form.find('*:input[required]:emptyVal').length) {
-                        showError('Заполните обязательные поля');
-                        return false;
-                    }
-
-                    formData = new FormData(form[0]);
-                    if (typeof appendToForm !== "undefined") {
-                        formData = addToForm(formData, appendToForm);
-                    }
-
-                    if (typeof quills !== "undefined") {
-                        formData = addQuillsToForm(formData, quills);
-                    }
-
-                    return formData;
-                }, function (data) {
-                    if (document === parent.document) {
-                        showOk('Действие успешно завершено :-)');
-                        let redirect = self.attr('data-redirect');
-                        if (redirect) {
-                            window.location = redirect;
-                        }
-
-                        self.find('button[type=submit]').prop('disabled', false);
-
-                        return;
-                    }
-
-                    $('#formParent').siblings('#ok-container').show().end();
-
-                    $(parent.document).trigger('formSubmit', {
-                        url: self.attr('action'),
-                        params: formData,
-                        result: data
-                    });
-                }, function (message) {
-                    if (message) {
-                        showError(message);
-                        return;
-                    }
-
-                    showError('Действие не удалось :-(');
-                });
-
-                return false;
-            });
-
             $(document).on('click', 'menu > a', function () {
                 let number = $(this).addClass('current').siblings('a').removeClass('current').end().index();
                 $('form > section').eq(number).removeClass('no-display').siblings('section').addClass('no-display');
@@ -620,41 +265,6 @@
 
             $('button.reset').click(function () {
                 $(this).parents('section, form').eq(0).find('*:input').val('');
-            });
-
-            $('select[data-depends-update-url]').each(function () {
-                let self = $(this),
-                    dependsField = $(this).attr('data-depends-field'),
-                    dependsElement = $(this).attr('data-depends-element') || dependsField,
-                    dependsUrl = $(this).attr('data-depends-update-url'),
-                    dependsTextField = $(this).attr('data-depends-text-field'),
-                    dependsValueField = $(this).attr('data-depends-value-field');
-
-                dependsElement = $('form').find('#' + dependsElement.replace(/[\[\]]/g, '\\$&'));
-
-                if (!dependsElement.length) {
-                    return;
-                }
-
-                let dependsLabelText = dependsElement.parents('.input-field').find('label').text();
-
-                $(this).on('click', function () {
-                    if (!dependsElement.val() && !$(this).children('option').length) {
-                        $(this).inputError('Сначала выберите элемент списка "' + dependsLabelText + '"');
-                    }
-                });
-
-                dependsElement.on('change', function () {
-                    self.val('');
-                    if (dependsUrl) {
-                        let params = {};
-                        params[dependsField] = $(this).val();
-                        $.applyAjax.request(dependsUrl, params, true, 'GET', function (options) {
-                            setSelectOptions(self, options, dependsTextField || 'name', dependsValueField || 'id');
-                            self.material_select();
-                        });
-                    }
-                });
             });
         });
     </script>

@@ -200,7 +200,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$formConf` (`array`) &mdash; - параметры конфигурации
+    - `$formConf` (`array`) - параметры конфигурации
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FieldException`](../avtomon/FieldException.md)
@@ -215,7 +215,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$form` (`array`) &mdash; - настройки формы
+    - `$form` (`array`) - настройки формы
 - Ничего не возвращает.
 
 ### `setSections()` <a name="setSections"></a>
@@ -248,9 +248,9 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - добавляемое поле
-    - `$sectionNumber` (`int`) &mdash; - номер раздела формы, в который добавлять поле
-    - `$isAppend` (`bool`) &mdash; - добавлять поле в конец и в начала раздела
+    - `$field` ([`Field`](../avtomon/Field.md)) - добавляемое поле
+    - `$sectionNumber` (`int`) - номер раздела формы, в который добавлять поле
+    - `$isAppend` (`bool`) - добавлять поле в конец и в начала раздела
 - Возвращает [`Form`](../avtomon/Form.md) value.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FormException`](../avtomon/FormException.md)
@@ -263,8 +263,8 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - добавляемое поле
-    - `$sectionNumber` (`int`) &mdash; - номер раздела формы, в который добавлять поле
+    - `$field` ([`Field`](../avtomon/Field.md)) - добавляемое поле
+    - `$sectionNumber` (`int`) - номер раздела формы, в который добавлять поле
 - Возвращает [`Form`](../avtomon/Form.md) value.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FormException`](../avtomon/FormException.md)
@@ -277,8 +277,8 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - добавляемое поле
-    - `$sectionNumber` (`int`) &mdash; - номер раздела формы, в который добавлять поле
+    - `$field` ([`Field`](../avtomon/Field.md)) - добавляемое поле
+    - `$sectionNumber` (`int`) - номер раздела формы, в который добавлять поле
 - Возвращает [`Form`](../avtomon/Form.md) value.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FormException`](../avtomon/FormException.md)
@@ -318,7 +318,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$valuesObject` (`array`) &mdash; - массив значений в формате &lt;имя поля&gt; =&gt; &lt;значение&gt;
+    - `$valuesObject` (`array`) - массив значений в формате &lt;имя поля&gt; =&gt; &lt;значение&gt;
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\FieldException`](../avtomon/FieldException.md)
@@ -333,8 +333,8 @@ class устанавливает следующие свойства:
 
 - **protected** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - поле-эталон
-    - `$value` (`string`) &mdash; - изображение или массив изображений
+    - `$field` ([`Field`](../avtomon/Field.md)) - поле-эталон
+    - `$value` (`string`) - изображение или массив изображений
 - Может возвращать одно из следующих значений:
     - `null`
     - `phpQueryObject`
@@ -352,8 +352,8 @@ class устанавливает следующие свойства:
 
 - **protected** method.
 - Может принимать следующий параметр(ы):
-    - `$field` ([`Field`](../avtomon/Field.md)) &mdash; - поле-эталон
-    - `$value` &mdash; - изображение или массив изображений
+    - `$field` ([`Field`](../avtomon/Field.md)) - поле-эталон
+    - `$value` - изображение или массив изображений
 - Может возвращать одно из следующих значений:
     - [`Field`](../avtomon/Field.md)
     - `null`
@@ -371,10 +371,10 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$selectName` (`string`) &mdash; - имя списка
-    - `$options` (`array`) &mdash; - элементы списка
-    - `$emptyText` (`null`) &mdash; - текст пустого пункта
-    - `$selectedValue` (`null`) &mdash; - элемент по умолчанию
+    - `$selectName` (`string`) - имя списка
+    - `$options` (`array`) - элементы списка
+    - `$emptyText` (`null`) - текст пустого пункта
+    - `$selectedValue` (`null`) - элемент по умолчанию
 - Может возвращать одно из следующих значений:
     - [`Field`](../avtomon/Field.md)
     - `null`
@@ -387,7 +387,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$newAction` (`string`) &mdash; - новое значение action
+    - `$newAction` (`string`) - новое значение action
 - Ничего не возвращает.
 
 ### `getFormConf()` <a name="getFormConf"></a>

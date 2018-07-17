@@ -62,7 +62,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$settings` (`array`) &mdash; - настройки объекта
+    - `$settings` (`array`) - настройки объекта
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\SectionException`](../avtomon/SectionException.md)

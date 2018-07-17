@@ -50,7 +50,7 @@ abstract class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$settings` (`array`) &mdash; - настройки объекта
+    - `$settings` (`array`) - настройки объекта
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`ReflectionException`](http://php.net/class.ReflectionException)
@@ -63,7 +63,7 @@ abstract class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$attributes` (`array`) &mdash; - массив атрибутов
+    - `$attributes` (`array`) - массив атрибутов
 - Ничего не возвращает.
 
 ### `addAttribute()` <a name="addAttribute"></a>
@@ -74,8 +74,8 @@ abstract class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$name` (`string`) &mdash; - имя атрибута
-    - `$value` (`string`) &mdash; - значение атрибута
+    - `$name` (`string`) - имя атрибута
+    - `$value` (`string`) - значение атрибута
 - Ничего не возвращает.
 
 ### `render()` <a name="render"></a>

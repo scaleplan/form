@@ -80,7 +80,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$settings` (`array`) &mdash; - настройки объекта
+    - `$settings` (`array`) - настройки объекта
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\MenuElementException`](../avtomon/MenuElementException.md)
@@ -94,7 +94,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$hash` (`string`) &mdash; - хэш
+    - `$hash` (`string`) - хэш
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\MenuElementException`](../avtomon/MenuElementException.md)
@@ -107,7 +107,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$text` (`string`) &mdash; - текст
+    - `$text` (`string`) - текст
 - Ничего не возвращает.
 
 ### `render()` <a name="render"></a>

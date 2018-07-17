@@ -80,7 +80,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$settings` (`array`) &mdash; - настройки объекта
+    - `$settings` (`array`) - настройки объекта
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\VariantException`](../avtomon/VariantException.md)
@@ -94,7 +94,7 @@ class устанавливает следующие свойства:
 
 - **public** method.
 - Может принимать следующий параметр(ы):
-    - `$type` (`string`) &mdash; - тип переключателя
+    - `$type` (`string`) - тип переключателя
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\VariantException`](../avtomon/VariantException.md)
