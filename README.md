@@ -118,27 +118,27 @@ buttons:
 ```
 
 Consider the configuration directives:
-- **labelAfter* * - generate labels after fields;
+- <b > labelAfter </b > - generate labels after fields;
 
-- **invisibleClass** - which class to use for element hiding;
+<b>invisibleClass</b> - which class to use for element hiding;
 
-- ***currentClass * * - class denoting the selected menu item (pointing to the selected section of the form);
+- <b>currentClass</b> - class denoting the selected menu item (indicates the selected section of the form);
 
-- ***currentNumber* * - which section of the form to choose by default;
+- <b>currentNumber</b> - which section of the form to choose by default;
 
-- ***templatePath* * - absolute path to the form template;
+- <b > templatePath</b> - absolute path to the form template;
 
-- **title ** - description of the form title,* text* - title text, you can also add any HTML-attributes, such as id, class, and the like...
+- <b>title</b> - description of the form title, <I> text</I > -title text, you can also add any HTML attributes such as id, class, and the like...
 
-- **form ** - attributes of the form (tag*\<form>)*);
+- <b > form</b> - attributes of the form itself (<I>\<form></i>tag);
 
-- **menu ** - attributes of the form menu (tag*\<menu>*), it makes sense if the form has sections (*sections*);
+- <b>menu </b > - form menu attributes (<I>\<menu > </I > tag), makes sense if the form has sections (<I>sections</i>));
 
-- **sections ** - form sections with attributes. In addition, the menu is formed by sections: menu items (tag *\<a>*) have the same anchor as the *title* attribute of the section and, if the section has *id*, for example, *main_info*, the corresponding menu item will have *href="#main_info"*. This part can be omitted if the form is not necessary to divide razdely, then section*fields* will be in the root config;
+- <b> sections</b > - form sections with attributes. In addition, the menu is formed by sections: menu items (<I>\<a></I> tag) have the same anchor as the <I>title</I> attribute of the section and, if the section has <I>id</I>, for example, <I>main_info</I>, the corresponding menu item will have <I>href="#main_info"</I>. This part can be omitted if the form is not necessary to divide razdely, then the <i>fields</i> will be in the root config;
 
-- **fields * * - form fields, attributes, templates and their wrappers, if necessary:
+- <b > fields</b> - form fields, attributes, templates and their wrappers, if necessary:
   - templates are used when instead of a blank form field, for example, input, we want to use an HTML template and already template elements to set attributes;
-   wrapper is an element, which wraps the form element, defaults to *\<div>*, i.e.,
+  - wrapper is the element into which the form element is wrapped, by default it is <i>\<div></i>, i.e. from
   ```
   - fieldWrapper:
       class: input-field
@@ -148,7 +148,7 @@ Consider the configuration directives:
   <div class= "input-field" ></div>
   ```
  
-- ***buttons* * - in the context of this section, this section buttons with attributes, in the context of the form-common to all sections of the button.
+- <b> buttons</b > - in the section context, these are buttons of the section with attributes, in the form context - common for all sections of the button.
 
 That's easy. Despite the possible volumetric configuration of the form, it is very easy to fall on the HTML-model
 
