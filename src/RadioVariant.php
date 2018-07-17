@@ -37,6 +37,7 @@ class RadioVariant extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws SectionException
+     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -71,7 +72,7 @@ class RadioVariant extends AbstractFormComponent
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
