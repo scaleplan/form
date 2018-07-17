@@ -8,7 +8,7 @@ To generate a form, you need:
 
 A form template is an HTML file with a new form inserted into its body, and in the simplest case it can look like this:
 
-"'html
+```
 <html>
   the <head>
     <title>example form template</title>  
@@ -21,7 +21,7 @@ A form template is an HTML file with a new form inserted into its body, and in t
 
 The size and complexity of the configuration depends on the complexity of the form. For example, privedem form redaktirovaniya user data:
 
-"'yaml
+```
 labelAfter: 1
 invisibleClass: no-display
 currentClass: current
@@ -139,12 +139,12 @@ Consider the configuration directives:
 - **fields * * - form fields, attributes, templates and their wrappers, if necessary:
   - templates are used when instead of a blank form field, for example, input, we want to use an HTML template and already template elements to set attributes;
    wrapper is an element, which wraps the form element, defaults to *\<div>*, i.e.,
-  "'yaml
+  ```
   - fieldWrapper:
       class: input-field
   ```
   the generated wrapper will be 
-  "'html
+  ```
   <div class= "input-field" ></div>
   ```
  
@@ -156,7 +156,7 @@ That's easy. Despite the possible volumetric configuration of the form, it is ve
 
 #### Now generation:
 
-"'php
+```
 $form = new Form(Yaml:: parse(file_get_contents('user.yml')));
 echo $form->render();
 ```
