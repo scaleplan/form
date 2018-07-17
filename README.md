@@ -132,9 +132,9 @@ Consider the configuration directives:
 
 - **form ** - attributes of the form (tag*\<form>)*);
 
-- **menu ** - attributes of the form menu (tag* <menu>*), it makes sense if the form has sections (*sections*);
+- **menu ** - attributes of the form menu (tag*\<menu>*), it makes sense if the form has sections (*sections*);
 
-- **sections ** - form sections with attributes. In addition, the menu is formed by sections: menu items (tag *<a>*) have the same anchor as the *title* attribute of the section and, if the section has *id*, for example, *main_info*, the corresponding menu item will have *href="#main_info"*. This part can be omitted if the form is not necessary to divide razdely, then section*fields* will be in the root config;
+- **sections ** - form sections with attributes. In addition, the menu is formed by sections: menu items (tag *\<a>*) have the same anchor as the *title* attribute of the section and, if the section has *id*, for example, *main_info*, the corresponding menu item will have *href="#main_info"*. This part can be omitted if the form is not necessary to divide razdely, then section*fields* will be in the root config;
 
 - **fields * * - form fields, attributes, templates and their wrappers, if necessary:
   - templates are used when instead of a blank form field, for example, input, we want to use an HTML template and already template elements to set attributes;
