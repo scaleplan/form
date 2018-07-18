@@ -1,6 +1,6 @@
 # SkaForm
 
-Form Builder in PHP.
+Form Builder for PHP.
 
 #### Installation
 
