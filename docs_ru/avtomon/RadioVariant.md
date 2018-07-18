@@ -66,6 +66,7 @@ class устанавливает следующие свойства:
 - Ничего не возвращает.
 - Выбрасывает одно из следующих исключений:
     - [`avtomon\SectionException`](../avtomon/SectionException.md)
+    - [`ReflectionException`](http://php.net/class.ReflectionException)
 
 ### `render()` <a name="render"></a>
 

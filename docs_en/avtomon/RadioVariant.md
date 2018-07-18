@@ -66,6 +66,7 @@ Constructor
 - Returns nothing.
 - Throws one of the following exceptions:
   - [`avtomon\SectionException`](../avtomon/SectionException.md)
+  - [`ReflectionException`](http://php.net/class.ReflectionException)
 
 ### `render()`<a name="render"> </a>
 

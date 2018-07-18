@@ -2,6 +2,16 @@
 
 Form Builder in PHP.
 
+#### Installation
+
+`
+composer reqire avtomon/skaform
+`
+
+<br>
+
+#### Description
+
 To generate a form, you need:
 - form template
 - shape configuration
