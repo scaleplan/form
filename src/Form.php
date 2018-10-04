@@ -1,24 +1,15 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибки
- *
- * Class FormException
- * @package avtomon
- */
-class FormException extends CustomException
-{
-}
+use Scaleplan\InitTrait\InitTrait;
 
 /**
  * Класс формы
  *
  * Class Form
- * @package avtomon
+ * @package Scaleplan\Form
  */
 class Form
 {

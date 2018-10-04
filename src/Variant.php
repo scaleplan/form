@@ -1,24 +1,16 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибок
- *
- * Class VariantException
- * @package avtomon
- */
-class VariantException extends CustomException
-{
-}
+use Scaleplan\Form\Exceptions\RadioVariantException;
 
 /**
  * Класс вариантов радио-кнопки
  *
  * Class Variant
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 class Variant extends AbstractFormComponent
 {
@@ -55,21 +47,21 @@ class Variant extends AbstractFormComponent
      *
      * @param array $settings - настройки объекта
      *
-     * @throws VariantException
+     * @throws RadioVariantException
      * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['type'])) {
-            throw new VariantException('Не задан тип переключателя');
+            throw new RadioVariantException('Не задан тип переключателя');
         }
 
         if (empty($settings['name'])) {
-            throw new VariantException('Не задано имя');
+            throw new RadioVariantException('Не задано имя');
         }
 
         if (empty($settings['labelText'])) {
-            throw new VariantException('Не задан текст метки');
+            throw new RadioVariantException('Не задан текст метки');
         }
 
         parent::__construct($settings);
@@ -80,12 +72,12 @@ class Variant extends AbstractFormComponent
      *
      * @param string $type - тип переключателя
      *
-     * @throws VariantException
+     * @throws RadioVariantException
      */
     public function setType(string $type): void
     {
         if (!\in_array($type, ['radio', 'checkbox'], true)) {
-            throw new VariantException('Значением типа может только checkbox и radio');
+            throw new RadioVariantException('Значением типа может только checkbox и radio');
         }
 
         $this->type = $type;
@@ -100,9 +92,15 @@ class Variant extends AbstractFormComponent
      */
     public function render()
     {
-        $field = phpQuery::pq('<input>')->attr('type', $this->type)->attr('name', $this->name);
-        $label = phpQuery::pq('<label>')->text($this->labelText);
+        $field = phpQuery::pq('<input>');
+        $field->attr('type', $this->type);
+        $field->attr('name', $this->name);
+
+        $label = phpQuery::pq('<label>');
+        $label->text($this->labelText);
+
         $field->after($label);
+
         FormHelper::renderAttributes($label, $this->attributes, ['type']);
 
         return $field;

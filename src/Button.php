@@ -1,24 +1,15 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибок
- *
- * Class ButtonException
- * @package avtomon
- */
-class ButtonException extends CustomException
-{
-}
 
 /**
  * Класс кнопки
  *
  * Class Button
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 class Button extends AbstractFormComponent
 {

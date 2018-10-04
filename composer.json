@@ -3,7 +3,7 @@
     "description": "Yet another form builder",
     "autoload": {
         "psr-4": {
-            "avtomon\\": "src/"
+            "Scaleplan\\Form\\": "src/"
         }
     },
     "require": {

@@ -5,7 +5,7 @@
 #### Установка
 
 ``
-composer reqire avtomon/skaform
+composer reqire scaleplan/form
 ``
 
 <br>

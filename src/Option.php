@@ -1,24 +1,15 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибки
- *
- * Class OptionException
- * @package avtomon
- */
-class OptionException extends CustomException
-{
-}
 
 /**
  * Класс элементов выпадающих списков
  *
  * Class Option
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 class Option extends AbstractFormComponent
 {
@@ -85,9 +76,9 @@ class Option extends AbstractFormComponent
      */
     public function render()
     {
-        $option = phpQuery::pq('<option>')
-            ->text($this->text ?: $this->value)
-            ->val($this->value ?: $this->text);
+        $option = phpQuery::pq('<option>');
+        $option->text($this->text ?: $this->value);
+        $option->val($this->value ?: $this->text);
 
         FormHelper::renderAttributes($option, $this->attributes);
 

@@ -1,24 +1,15 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- *
- *
- * Class FieldWrapperException
- * @package avtomon
- */
-class FieldWrapperException extends CustomException
-{
-}
 
 /**
  * Обертка полей формы
  *
  * Class FieldWrapper
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 class FieldWrapper extends AbstractFormComponent
 {

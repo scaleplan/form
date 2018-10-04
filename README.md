@@ -5,7 +5,7 @@ Form Builder for PHP.
 #### Installation
 
 `
-composer reqire avtomon/skaform
+composer reqire scaleplan/form
 `
 
 <br>

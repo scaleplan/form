@@ -1,24 +1,14 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибок
- *
- * Class SectionException
- * @package avtomon
- */
-class SectionException extends CustomException
-{
-}
 
 /**
  * Класс разделов формы
  *
  * Class Section
- * @package avtomon
+ * @package Scaleplan\Form
  */
 class Section extends AbstractFormComponent
 {
@@ -55,8 +45,7 @@ class Section extends AbstractFormComponent
      *
      * @param array $settings - настройки объекта
      *
-     * @throws FieldException
-     * @throws VariantException
+     * @throws Exceptions\FieldException
      * @throws \ReflectionException
      */
     public function __construct(array $settings)

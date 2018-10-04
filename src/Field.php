@@ -1,24 +1,16 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибок
- *
- * Class FieldException
- * @package avtomon
- */
-class FieldException extends CustomException
-{
-}
+use Scaleplan\Form\Exceptions\FieldException;
 
 /**
  * Класс полей формы
  *
  * Class Field
- * @package avtomon
+ *
+ * @package Scaleplan\Form;
  */
 class Field extends AbstractFormComponent
 {
@@ -185,7 +177,6 @@ class Field extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws FieldException
-     * @throws VariantException
      * @throws \ReflectionException
      */
     public function __construct(array $settings)
@@ -199,7 +190,9 @@ class Field extends AbstractFormComponent
         }
 
         if (!empty($settings['fieldWrapper'])) {
-            $settings['fieldWrapper'] = new FieldWrapper($settings['fieldWrapper'] + ['required' => $field['required'] ?? '']);
+            $settings['fieldWrapper'] = new FieldWrapper(
+                $settings['fieldWrapper'] + ['required' => $field['required'] ?? '']
+            );
         }
 
         if (!empty($settings['options']) && \is_array($settings['options'])) {
@@ -426,11 +419,15 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find('select') : phpQuery::pq('<select>'))) {
+        if (!($field = $this->getRenderedTemplate()
+            ? $this->getRenderedTemplate()->find('select')
+            : phpQuery::pq('<select>'))
+        ) {
             return null;
         }
 
-        $field->val($this->value)->attr('name', $this->getName());
+        $field->val($this->value);
+        $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
         if ($this->emptyText !== null) {
@@ -438,7 +435,15 @@ class Field extends AbstractFormComponent
         }
 
         foreach($this->options as $option) {
-            if ($this->selectedValue !== null && ($this->selectedValue == $option->getValue() || $this->selectedValue == $option->getText())) {
+            if (
+                $this->selectedValue !== null
+                &&
+                (
+                    $this->selectedValue == $option->getValue()
+                    ||
+                    $this->selectedValue == $option->getText()
+                )
+            ) {
                 $option->addAttribute('selected', 'selected');
             }
 
@@ -461,7 +466,12 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($hint = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find($this->hintSelector) : phpQuery::pq($this->hintHTML))) {
+        if (
+            !($hint = $this->getRenderedTemplate()
+                ? $this->getRenderedTemplate()->find($this->hintSelector)
+                : phpQuery::pq($this->hintHTML)
+            )
+        ) {
             return null;
         }
 
@@ -481,13 +491,19 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($label = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find('label') : phpQuery::pq('<label>'))) {
+        if (
+            !($label = $this->getRenderedTemplate()
+                ? $this->getRenderedTemplate()->find('label')
+                : phpQuery::pq('<label>')
+            )
+        ) {
             return null;
         }
 
-        return $label
-            ->text($this->labelText)
-            ->attr('for', $this->attributes['id']);
+        $label->text($this->labelText);
+        $label->attr('for', $this->attributes['id']);
+
+        return $label;
     }
 
     /**
@@ -507,7 +523,9 @@ class Field extends AbstractFormComponent
             return $this->renderedTemplate = false;
         }
 
-        $this->renderedTemplate = phpQuery::newDocumentFileHTML($_SERVER['DOCUMENT_ROOT'] . $this->templatePath . '/' . $this->template);
+        $this->renderedTemplate = phpQuery::newDocumentFileHTML(
+            $_SERVER['DOCUMENT_ROOT'] . $this->templatePath . '/' . $this->template
+        );
         $this->renderedTemplate->find('*[data-view]')->attr('data-view', $this->name);
 
         return $this->renderedTemplate;
@@ -526,13 +544,17 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='{$this->getType()}']") : phpQuery::pq('<input>')->attr('type', $this->getType()))) {
+        if (
+            !($field = $this->getRenderedTemplate()
+                ? $this->getRenderedTemplate()->find("input[type='{$this->getType()}']")
+                : phpQuery::pq('<input>')->attr('type', $this->getType())
+            )
+        ) {
             return null;
         }
 
-        $field
-            ->val($this->value)
-            ->attr('name', $this->getName());
+        $field->val($this->value);
+        $field->attr('name', $this->getName());
 
         FormHelper::renderAttributes($field, $this->attributes);
 
@@ -552,7 +574,12 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='hidden']") : phpQuery::pq('<input>')->attr('type', 'hidden'))) {
+        if (
+            !($field = $this->getRenderedTemplate()
+                ? $this->getRenderedTemplate()->find("input[type='hidden']")
+                : phpQuery::pq('<input>')->attr('type', 'hidden')
+            )
+        ) {
             return null;
         }
 
@@ -587,7 +614,12 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find("input[type='{$this->type}']") : array_shift($this->variants)->render())) {
+        if (
+            !($field = $this->getRenderedTemplate()
+                ? $this->getRenderedTemplate()->find("input[type='{$this->type}']")
+                : array_shift($this->variants)->render()
+            )
+        ) {
             return null;
         }
 
@@ -615,11 +647,17 @@ class Field extends AbstractFormComponent
             return null;
         }
 
-        if (!($field = $this->getRenderedTemplate() ? $this->getRenderedTemplate()->find('textarea') : phpQuery::pq('<textarea>'))) {
+        if (
+            !($field = $this->getRenderedTemplate()
+                ? $this->getRenderedTemplate()->find('textarea')
+                : phpQuery::pq('<textarea>')
+            )
+        ) {
             return null;
         }
 
-        $field->val($this->value)->attr('name', $this->getName());
+        $field->val($this->value);
+        $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
         return $field;

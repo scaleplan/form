@@ -1,24 +1,16 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 use phpQuery;
-
-/**
- * Класс ошибки
- *
- * Class MenuElementException
- * @package avtomon
- */
-class MenuElementException extends CustomException
-{
-}
+use Scaleplan\Form\Exceptions\MenuException;
 
 /**
  * Класс элементов меню
  *
  * Class MenuElement
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 class MenuElement extends AbstractFormComponent
 {
@@ -57,13 +49,13 @@ class MenuElement extends AbstractFormComponent
      *
      * @param array $settings - настройки объекта
      *
-     * @throws MenuElementException
+     * @throws MenuException
      * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['text'])) {
-            throw new MenuElementException('Не задан текст элемента меню');
+            throw new MenuException('Не задан текст элемента меню');
         }
 
         parent::__construct($settings);
@@ -74,12 +66,12 @@ class MenuElement extends AbstractFormComponent
      *
      * @param string $hash - хэш
      *
-     * @throws MenuElementException
+     * @throws MenuException
      */
     public function setHash(string $hash): void
     {
         if (!preg_match('/^#[\w-]+$/', $hash)) {
-            throw new MenuElementException('Неверный формат хэша');
+            throw new MenuException('Неверный формат хэша');
         }
 
         $this->hash = $hash;
@@ -104,9 +96,10 @@ class MenuElement extends AbstractFormComponent
      */
     public function render()
     {
-        $menuEl = phpQuery::pq("<{$this->tag}>")
-            ->text($this->text)
-            ->attr('href', $this->hash);
+        $menuEl = phpQuery::pq("<{$this->tag}>");
+        $menuEl->text($this->text);
+        $menuEl->attr('href', $this->hash);
+
         FormHelper::renderAttributes($menuEl, $this->attributes);
 
         return $menuEl;

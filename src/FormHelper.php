@@ -1,12 +1,13 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
 
 /**
  * Класс полезных методов формы
  *
  * Class FormHelper
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 class FormHelper
 {

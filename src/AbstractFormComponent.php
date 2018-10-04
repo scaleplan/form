@@ -1,12 +1,15 @@
 <?php
 
-namespace avtomon;
+namespace Scaleplan\Form;
+
+use Scaleplan\InitTrait\InitTrait;
 
 /**
  * Базовый класс компанентов формы
  *
  * Class AbstractFormComponent
- * @package avtomon
+ *
+ * @package Scaleplan\Form
  */
 abstract class AbstractFormComponent
 {
