@@ -1,10 +1,6 @@
 {
-    "name": "avtomon/SkaForm",
+    "name": "scaleplan/form",
     "description": "Yet another form builder",
-    "minimum-stability": "dev",
-    "config": {
-        "process-timeout": 1800
-    },
     "autoload": {
         "psr-4": {
             "avtomon\\": "src/"
