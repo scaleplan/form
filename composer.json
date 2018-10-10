@@ -7,6 +7,13 @@
         }
     },
     "require": {
-        "php": ">=7.2"
-    }
+        "php": ">=7.2",
+        "avtomon/phpquery-single": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/avtomon/phpquery-single.git"
+        }
+    ]
 }
