@@ -86,7 +86,7 @@ class Variant extends AbstractFormComponent
     /**
      * Отрендерить вариант переключателя
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     * @return \phpQueryObject|null
      *
      * @throws \Exception
      */

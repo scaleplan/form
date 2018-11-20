@@ -49,13 +49,14 @@ class Button extends AbstractFormComponent
     /**
      * Отрендерить кнопку
      *
-     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     * @return null|\phpQueryObject|string
      *
      * @throws \Exception
      */
     public function render()
     {
-        $button = phpQuery::pq('<button>')->text($this->text);
+        $button = phpQuery::pq('<button>');
+        $button->text($this->text);
         FormHelper::renderAttributes($button, $this->attributes);
 
         return $button;

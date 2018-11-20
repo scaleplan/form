@@ -167,7 +167,7 @@ class Field extends AbstractFormComponent
     /**
      * phpQuery-объект шаблона поля
      *
-     * @var null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @var null|\phpQueryObject
      */
     protected $renderedTemplate;
 
@@ -176,6 +176,7 @@ class Field extends AbstractFormComponent
      *
      * @param array $settings - настройки объекта
      *
+     * @throws Exceptions\RadioVariantException
      * @throws FieldException
      * @throws \ReflectionException
      */
@@ -239,8 +240,8 @@ class Field extends AbstractFormComponent
             return;
         }
 
-        if (!preg_match('/.+\.' . self::TEMPLATE_EXTENSION . '$/', $template)) {
-            $template = "$template." . self::TEMPLATE_EXTENSION;
+        if (!preg_match('/.+\.' . static::TEMPLATE_EXTENSION . '$/', $template)) {
+            $template = "$template." . static::TEMPLATE_EXTENSION;
         }
 
         $this->template = $template;
@@ -255,7 +256,7 @@ class Field extends AbstractFormComponent
      */
     public function setType(string $type): void
     {
-        if (!\in_array($type, self::ALLOWED_TYPES, true)) {
+        if (!\in_array($type, static::ALLOWED_TYPES, true)) {
             throw new FieldException("Тип поля $type не поддерживается");
         }
 
@@ -409,7 +410,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить поле выпадающего списка
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return false|null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -456,7 +457,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить подсказку поля
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return false|null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -481,7 +482,7 @@ class Field extends AbstractFormComponent
     /**
      * Рендеринг метки поля
      *
-     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return null|\phpQueryObject
      *
      * @throws \Exception
      */
@@ -509,7 +510,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить поле представленное шаблоном
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return false|null|\phpQueryObject
      *
      * @throws \Exception
      */
@@ -534,7 +535,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить однострочное поле ввода
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return false|null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -564,7 +565,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить скрытое поле ввода
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return false|null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -604,7 +605,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить переключатель
      *
-     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     * @return null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -637,7 +638,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить многострочное поле ввода
      *
-     * @return false|null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|String
+     * @return false|null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -666,7 +667,7 @@ class Field extends AbstractFormComponent
     /**
      * Отрендерить поле
      *
-     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     * @return null|\phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -700,7 +701,7 @@ class Field extends AbstractFormComponent
             return $this->getRenderedTemplate();
         }
 
-        if (!empty(self::$settings['labelAfter'])) {
+        if (!empty(static::$settings['labelAfter'])) {
             $elements = [&$field, &$hint, &$label];
         } else {
             $elements = [&$label, &$field, &$hint];

@@ -14,11 +14,11 @@ class FormHelper
     /**
      * Добавить атрибуты к элементу
      *
-     * @param \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery $el - элемент
+     * @param \phpQueryObject $el - элемент
      * @param array $attrs - массив атрибутов вида <имя атрибута> => <значение атрибута>
      * @param array $stopAttrs - массив имен атрибутов, которые добавлять не надо
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     * @return \phpQueryObject|null
      */
     public static function renderAttributes(&$el, array $attrs, array $stopAttrs = [])
     {

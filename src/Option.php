@@ -70,7 +70,7 @@ class Option extends AbstractFormComponent
     /**
      * Отрендерить элемент списка
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     * @return \phpQueryObject|null
      *
      * @throws \Exception
      */

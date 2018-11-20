@@ -90,7 +90,7 @@ class MenuElement extends AbstractFormComponent
     /**
      * Отрендерить элемент меню
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     * @return \phpQueryObject|null
      *
      * @throws \Exception
      */

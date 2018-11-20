@@ -32,7 +32,7 @@ class FieldWrapper extends AbstractFormComponent
     /**
      * Отрендерить обертку поля
      *
-     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesPhpQuery|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     * @return null|\phpQueryObject|string
      *
      * @throws \Exception
      */

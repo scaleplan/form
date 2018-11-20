@@ -3,6 +3,7 @@
 namespace Scaleplan\Form;
 
 use phpQuery;
+use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\InitTrait\InitTrait;
 
 /**
@@ -105,7 +106,7 @@ class Form
     /**
      * Разделы полей формы
      *
-     * @var array
+     * @var Section[]
      */
     protected $sections = [];
 
@@ -128,8 +129,8 @@ class Form
      *
      * @param array $formConf - параметры конфигурации
      *
-     * @throws FieldException
-     * @throws VariantException
+     * @throws Exceptions\FieldException
+     * @throws Exceptions\RadioVariantException
      * @throws \ReflectionException
      */
     public function __construct(array $formConf)
@@ -272,7 +273,7 @@ class Form
     /**
      * Превратить форму в HTML-разметку
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|string
+     * @return \phpQueryObject|string
      *
      * @throws \Exception
      */
@@ -282,7 +283,8 @@ class Form
 
         $formParent = phpQuery::pq('<div>')->attr('id', 'formParent')->appendTo($formDocument);
 
-        $title = phpQuery::pq('<div>')->html($this->title['text'] ?? '')->appendTo($formParent);
+        $title = phpQuery::pq('<div>')->html($this->title['text'] ?? '');
+        $title->appendTo($formParent);
         FormHelper::renderAttributes($title, $this->title);
 
         $form = phpQuery::pq('<form>')->appendTo($formParent);
@@ -294,7 +296,7 @@ class Form
             $title->after($menu);
 
             foreach($this->sections as $title => $section) {
-                if ($title === array_keys($this->sections)[self::ADDITIONAL_FIELDS_SECTION_NUMBER]) {
+                if ($title === array_keys($this->sections)[static::ADDITIONAL_FIELDS_SECTION_NUMBER]) {
                     $section = clone $section;
                     $section->setFields(array_merge($this->additionalFields, $section->getFields()));
                 }
@@ -322,8 +324,6 @@ class Form
      *
      * @param array $valuesObject - массив значений в формате <имя поля> => <значение>
      *
-     * @throws FieldException
-     * @throws VariantException
      * @throws \ReflectionException
      */
     public function setFormValues(array $valuesObject): void
@@ -350,7 +350,8 @@ class Form
      * @param Field $field - поле-эталон
      * @param $value - изображение или массив изображений
      *
-     * @return null|\phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
+     * @return null|\phpQueryObject
+     *
      * @throws \Exception
      */
     protected function setImageValue(Field $field, string $value)
@@ -374,10 +375,10 @@ class Form
      * @param Field $field - поле-эталон
      * @param $value - изображение или массив изображений
      *
-     * @return Field|null
+     * @return null|Field
      *
-     * @throws FieldException
-     * @throws VariantException
+     * @throws Exceptions\FieldException
+     * @throws Exceptions\RadioVariantException
      * @throws \ReflectionException
      * @throws \Exception
      */

@@ -46,6 +46,7 @@ class Section extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws Exceptions\FieldException
+     * @throws Exceptions\RadioVariantException
      * @throws \ReflectionException
      */
     public function __construct(array $settings)
@@ -170,7 +171,7 @@ class Section extends AbstractFormComponent
     /**
      * Отрендерить раздел формы
      *
-     * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery|null
+     * @return \phpQueryObject|null
      *
      * @throws \Exception
      */
@@ -193,7 +194,7 @@ class Section extends AbstractFormComponent
     /**
      * Вернуть поля раздела
      *
-     * @return array
+     * @return Field[]
      */
     public function getFields(): array
     {
