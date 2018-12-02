@@ -8,12 +8,12 @@
     },
     "require": {
         "php": ">=7.2",
-        "avtomon/phpquery-single": "dev-master"
+        "JaderH/phpQuery-single": "dev-master"
     },
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/avtomon/phpquery-single.git"
+            "url": "https://github.com/JaderH/phpQuery-single.git"
         }
     ]
 }
