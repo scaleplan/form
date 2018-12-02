@@ -8,12 +8,12 @@
     },
     "require": {
         "php": ">=7.2",
-        "JaderH/phpQuery-single": "dev-master"
+        "scaleplan/phpQuery-single": "dev-master"
     },
     "repositories": [
         {
             "type": "git",
-            "url": "https://github.com/JaderH/phpQuery-single.git"
+            "url": "https://github.com/scaleplan/phpQuery-single.git"
         }
     ]
 }
