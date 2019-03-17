@@ -1,9 +1,11 @@
 <?php
 
-namespace Scaleplan\Form;
+namespace Scaleplan\Form\Fields;
 
 use phpQuery;
+use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\RadioVariantException;
+use Scaleplan\Form\FormHelper;
 
 /**
  * Класс вариантов радио-кнопки
@@ -48,7 +50,6 @@ class Variant extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws RadioVariantException
-     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -90,7 +91,7 @@ class Variant extends AbstractFormComponent
      *
      * @throws \Exception
      */
-    public function render()
+    public function render() : ?\phpQueryObject
     {
         $field = phpQuery::pq('<input>');
         $field->attr('type', $this->type);

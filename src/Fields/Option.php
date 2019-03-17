@@ -1,8 +1,10 @@
 <?php
 
-namespace Scaleplan\Form;
+namespace Scaleplan\Form\Fields;
 
 use phpQuery;
+use Scaleplan\Form\AbstractFormComponent;
+use Scaleplan\Form\FormHelper;
 
 /**
  * Класс элементов выпадающих списков
@@ -74,7 +76,7 @@ class Option extends AbstractFormComponent
      *
      * @throws \Exception
      */
-    public function render()
+    public function render() : ?\phpQueryObject
     {
         $option = phpQuery::pq('<option>');
         $option->text($this->text ?: $this->value);

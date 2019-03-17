@@ -3,6 +3,8 @@
 namespace Scaleplan\Form;
 
 use phpQuery;
+use Scaleplan\Form\Fields\AbstractField;
+use Scaleplan\Form\Fields\FieldFabric;
 
 /**
  * Класс разделов формы
@@ -47,7 +49,6 @@ class Section extends AbstractFormComponent
      *
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
-     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -57,7 +58,7 @@ class Section extends AbstractFormComponent
 
         if (!empty($settings['fields']) && \is_array($settings['fields'])) {
             foreach ($settings['fields'] as &$field) {
-                $field = new Field($field);
+                $field = FieldFabric::getField($field);
             }
 
             unset($field);
@@ -83,7 +84,7 @@ class Section extends AbstractFormComponent
     {
         $this->fields = [];
         foreach ($fields as $field) {
-            if (!($field instanceof Field)) {
+            if (!($field instanceof AbstractField)) {
                 continue;
             }
 
@@ -94,10 +95,10 @@ class Section extends AbstractFormComponent
     /**
      * Добавить поле к разделу
      *
-     * @param Field $field - объект поля
+     * @param AbstractField $field - объект поля
      * @param bool $isAppend - добавлять поле в конец и в начала раздела
      */
-    public function addField(Field $field, bool $isAppend = true): void
+    public function addField(AbstractField $field, bool $isAppend = true): void
     {
         $isAppend ? array_push($this->fields, $field) : array_unshift($this->fields, $field);
     }
@@ -105,9 +106,9 @@ class Section extends AbstractFormComponent
     /**
      * Добавить поле в конец раздела
      *
-     * @param Field $field - объект поля
+     * @param AbstractField $field - объект поля
      */
-    public function appendField(Field $field): void
+    public function appendField(AbstractField $field): void
     {
         $this->addField($field);
     }
@@ -115,9 +116,9 @@ class Section extends AbstractFormComponent
     /**
      * Добавить поле в начало раздела
      *
-     * @param Field $field - объект поля
+     * @param AbstractField $field - объект поля
      */
-    public function prependField(Field $field): void
+    public function prependField(AbstractField $field): void
     {
         $this->addField($field, false);
     }
@@ -125,9 +126,9 @@ class Section extends AbstractFormComponent
     /**
      * Удалить поле раздела по имени
      *
-     * @param Field $field - удаляемое поле
+     * @param AbstractField $field - удаляемое поле
      */
-    public function deleteField(Field $field): void
+    public function deleteField(AbstractField $field): void
     {
         unset($this->fields[array_search($field, $this->fields, true)]);
     }
@@ -175,7 +176,7 @@ class Section extends AbstractFormComponent
      *
      * @throws \Exception
      */
-    public function render()
+    public function render() : ?\phpQueryObject
     {
         $formSection = phpQuery::pq('<section>')->attr('id', $this->id);
         FormHelper::renderAttributes($formSection, $this->attributes);
@@ -194,7 +195,7 @@ class Section extends AbstractFormComponent
     /**
      * Вернуть поля раздела
      *
-     * @return Field[]
+     * @return AbstractField[]
      */
     public function getFields(): array
     {

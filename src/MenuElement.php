@@ -50,7 +50,6 @@ class MenuElement extends AbstractFormComponent
      * @param array $settings - настройки объекта
      *
      * @throws MenuException
-     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -94,7 +93,7 @@ class MenuElement extends AbstractFormComponent
      *
      * @throws \Exception
      */
-    public function render()
+    public function render() : ?\phpQueryObject
     {
         $menuEl = phpQuery::pq("<{$this->tag}>");
         $menuEl->text($this->text);

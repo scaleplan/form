@@ -20,7 +20,7 @@ class FormHelper
      *
      * @return \phpQueryObject|null
      */
-    public static function renderAttributes(&$el, array $attrs, array $stopAttrs = [])
+    public static function renderAttributes(\phpQueryObject $el, array $attrs, array $stopAttrs = []) : ?\phpQueryObject
     {
         unset($attrs['html'], $attrs['text'], $attrs['value'], $attrs['hint']);
         foreach ($attrs as $attr => $value) {

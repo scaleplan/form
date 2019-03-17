@@ -4,7 +4,12 @@ namespace Scaleplan\Form;
 
 use phpQuery;
 use Scaleplan\Form\Exceptions\FormException;
+use Scaleplan\Form\Fields\AbstractField;
+use Scaleplan\Form\Fields\Option;
+use Scaleplan\Form\Fields\TemplateField;
+use Scaleplan\Form\Interfaces\RenderInterface;
 use Scaleplan\InitTrait\InitTrait;
+use Scaleplan\Form\Fields\FieldFabric;
 
 /**
  * Класс формы
@@ -12,7 +17,7 @@ use Scaleplan\InitTrait\InitTrait;
  * Class Form
  * @package Scaleplan\Form
  */
-class Form
+class Form implements RenderInterface
 {
     /**
      * Трейт инициализации
@@ -131,7 +136,6 @@ class Form
      *
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
-     * @throws \ReflectionException
      */
     public function __construct(array $formConf)
     {
@@ -146,7 +150,7 @@ class Form
             unset($section);
         } else if (!empty($formConf['fields']) && \is_array($formConf['fields'])) {
             foreach ($formConf['fields'] as &$field) {
-                $field = new Field($field);
+                $field = FieldFabric::getField($field);
             }
 
             unset($field);
@@ -195,7 +199,7 @@ class Form
     /**
      * Добавить поле к форме
      *
-     * @param Field $field - добавляемое поле
+     * @param AbstractField $field - добавляемое поле
      * @param int $sectionNumber - номер раздела формы, в который добавлять поле
      * @param bool $isAppend - добавлять поле в конец и в начала раздела
      *
@@ -203,7 +207,7 @@ class Form
      *
      * @throws FormException
      */
-    public function addField(Field $field, int $sectionNumber = -1, bool $isAppend = true): Form
+    public function addField(AbstractField $field, int $sectionNumber = -1, bool $isAppend = true): Form
     {
         if ($this->sections) {
             if ($sectionNumber === -1) {
@@ -227,14 +231,14 @@ class Form
     /**
      * Добавить поле к форме в конец раздела
      *
-     * @param Field $field - добавляемое поле
+     * @param AbstractField $field - добавляемое поле
      * @param int $sectionNumber - номер раздела формы, в который добавлять поле
      *
      * @return Form
      *
      * @throws FormException
      */
-    public function appendField(Field $field, int $sectionNumber = -1): Form
+    public function appendField(AbstractField $field, int $sectionNumber = -1): Form
     {
         return $this->addField($field, $sectionNumber);
     }
@@ -242,14 +246,14 @@ class Form
     /**
      * Добавить поле к форме в начало раздела
      *
-     * @param Field $field - добавляемое поле
+     * @param AbstractField $field - добавляемое поле
      * @param int $sectionNumber - номер раздела формы, в который добавлять поле
      *
      * @return Form
      *
      * @throws FormException
      */
-    public function prependField(Field $field, int $sectionNumber = -1): Form
+    public function prependField(AbstractField $field, int $sectionNumber = -1): Form
     {
         return $this->addField($field, $sectionNumber, false);
     }
@@ -262,7 +266,7 @@ class Form
     public function setFields(array $fields): void
     {
         foreach ($fields as $field) {
-            if (!($field instanceof Field)) {
+            if (!($field instanceof AbstractField)) {
                 continue;
             }
 
@@ -273,16 +277,16 @@ class Form
     /**
      * Превратить форму в HTML-разметку
      *
-     * @return \phpQueryObject|string
+     * @return \phpQueryObject
      *
      * @throws \Exception
      */
-    public function render()
+    public function render() : \phpQueryObject
     {
         $formDocument = phpQuery::newDocument();
-
         $formParent = phpQuery::pq('<div>')->attr('id', 'formParent')->appendTo($formDocument);
 
+        /** @var \phpQueryObject $title */
         $title = phpQuery::pq('<div>')->html($this->title['text'] ?? '');
         $title->appendTo($formParent);
         FormHelper::renderAttributes($title, $this->title);
@@ -324,7 +328,8 @@ class Form
      *
      * @param array $valuesObject - массив значений в формате <имя поля> => <значение>
      *
-     * @throws \ReflectionException
+     * @throws Exceptions\FieldException
+     * @throws Exceptions\RadioVariantException
      */
     public function setFormValues(array $valuesObject): void
     {
@@ -347,42 +352,16 @@ class Form
     /**
      * Вставка изображений
      *
-     * @param Field $field - поле-эталон
+     * @param AbstractField $field - поле-эталон
      * @param $value - изображение или массив изображений
      *
-     * @return null|\phpQueryObject
-     *
-     * @throws \Exception
-     */
-    protected function setImageValue(Field $field, string $value)
-    {
-        if (!$value || $field->getType() !== 'file') {
-            return null;
-        }
-
-        if (!$field->getRenderedTemplate() || !((string) $element = $field->getRenderedTemplate()->find("img[data-view='{$field->getName()}']"))) {
-            return null;
-        }
-
-        $element->attr('src', $value);
-
-        return $element;
-    }
-
-    /**
-     * Вставка изображений
-     *
-     * @param Field $field - поле-эталон
-     * @param $value - изображение или массив изображений
-     *
-     * @return null|Field
+     * @return null|AbstractField
      *
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
-     * @throws \ReflectionException
      * @throws \Exception
      */
-    protected function setFileValue(Field $field, $value): ?Field
+    protected function setFileValue(AbstractField $field, $value): ?AbstractField
     {
         if (!$value || $field->getType() !== 'file') {
             return null;
@@ -391,18 +370,19 @@ class Form
         $name = $field->getName();
 
         if (!\is_array($value)) {
-            if ($this->setImageValue($field, $value)) {
-                return $field;
-            }
+            $field->setValue($value);
 
             $value = [$value];
         }
 
         $newField = $field;
-        if (!$field->getRenderedTemplate() || !((string) $dataView = $field->getRenderedTemplate()->find("*[data-view='{$field->getName()}']"))) {
-            return null;
+        $dataView = null;
+        if ($field instanceof TemplateField) {
+            $render = $field->render();
+            if ($render) {
+                $dataView = $render->find("*[data-view='{$field->getName()}']");
+            }
         }
-
         foreach ($value as $file) {
             if (empty($file[$this->filePathKey])) {
                 continue;
@@ -410,7 +390,7 @@ class Form
 
             $file[$this->filePosterKey] = $file[$this->filePosterKey] ?? '';
 
-            $newField = new Field(
+            $newField = FieldFabric::getField(
                 [
                     'type' => 'hidden',
                     'name' => $this->fileNamePrefix . $name,
@@ -421,15 +401,14 @@ class Form
             );
 
             $this->additionalFields[] = $newField;
-
             if ($dataView) {
-                $clone = $dataView->clone()
-                    ->removeClass('no-image')
-                    ->attr('src', $file[$this->filePosterKey])
-                    ->attr('data-object-src', $file[$this->filePathKey])
-                    ->attr('title', $file[$this->fileNameKey])
-                    ->attr('data-type', $field->getAttribute('data-type') ?: '')
-                    ->attr('data-source', $this->fileNamePrefix . $name);
+                $clone = $dataView->clone();
+                $clone->removeClass('no-image');
+                $clone->attr('src', $file[$this->filePosterKey]);
+                $clone->attr('data-object-src', $file[$this->filePathKey]);
+                $clone->attr('title', $file[$this->fileNameKey]);
+                $clone->attr('data-type', $field->getAttribute('data-type') ?: '');
+                $clone->attr('data-source', $this->fileNamePrefix . $name);
 
                 $dataView->after($clone);
                 if ($dataView->hasClass('no-image')) {
@@ -448,21 +427,22 @@ class Form
      *
      * @param string $selectName - имя списка
      * @param array $options - элементы списка
-     * @param null $emptyText - текст пустого пункта
-     * @param null $selectedValue - элемент по умолчанию
-     *
-     * @return Field|null
+     * @param string $emptyText - текст пустого пункта
+     * @param mixed $selectedValue - элемент по умолчанию
      */
-    public function setSelectOptions(string $selectName, array $options, $emptyText = null, $selectedValue = null): ?Field
+    public function setSelectOptions(
+        string $selectName,
+        array $options,
+        string $emptyText = null,
+        $selectedValue = null
+    ) : void
     {
-        $search = function (array $fields) use (&$selectName, &$options, &$emptyText, &$selectedValue): ?Field {
+        $search = function (array &$fields) use (&$selectName, &$options, &$emptyText, &$selectedValue) {
             $result = null;
             foreach ($fields as &$field) {
                 if ($field->getName() !== $selectName) {
                     continue;
                 }
-
-                $result = $field;
 
                 $field->setEmptyText($emptyText);
                 $field->setSelectedValue($selectedValue);
@@ -471,20 +451,18 @@ class Form
                     $field->addOption($option);
                 }
             }
-
-            return $result;
         };
 
         if ($this->sections) {
             $result = null;
             foreach ($this->sections as $section) {
-                $result = $search($section->getFields());
+                $fields = $section->getFields();
+                $search($fields);
+                $section->setFields($fields);
             }
-
-            return $result;
         }
 
-        return $search($this->fields);
+        $search($this->fields);
     }
 
     /**

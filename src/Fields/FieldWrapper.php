@@ -1,8 +1,10 @@
 <?php
 
-namespace Scaleplan\Form;
+namespace Scaleplan\Form\Fields;
 
 use phpQuery;
+use Scaleplan\Form\AbstractFormComponent;
+use Scaleplan\Form\FormHelper;
 
 /**
  * Обертка полей формы
@@ -32,11 +34,11 @@ class FieldWrapper extends AbstractFormComponent
     /**
      * Отрендерить обертку поля
      *
-     * @return null|\phpQueryObject|string
+     * @return null|\phpQueryObject
      *
      * @throws \Exception
      */
-    public  function render()
+    public  function render() : ?\phpQueryObject
     {
         $fieldWrapper = phpQuery::pq("<{$this->tag}>");
         FormHelper::renderAttributes($fieldWrapper, $this->attributes);

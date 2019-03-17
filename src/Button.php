@@ -24,8 +24,6 @@ class Button extends AbstractFormComponent
      * Конструтктор
      *
      * @param array $settings - настройки объекта
-     *
-     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -49,11 +47,11 @@ class Button extends AbstractFormComponent
     /**
      * Отрендерить кнопку
      *
-     * @return null|\phpQueryObject|string
+     * @return \phpQueryObject|null
      *
      * @throws \Exception
      */
-    public function render()
+    public function render() : ?\phpQueryObject
     {
         $button = phpQuery::pq('<button>');
         $button->text($this->text);

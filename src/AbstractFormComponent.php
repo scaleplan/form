@@ -2,6 +2,7 @@
 
 namespace Scaleplan\Form;
 
+use Scaleplan\Form\Interfaces\RenderInterface;
 use Scaleplan\InitTrait\InitTrait;
 
 /**
@@ -11,7 +12,7 @@ use Scaleplan\InitTrait\InitTrait;
  *
  * @package Scaleplan\Form
  */
-abstract class AbstractFormComponent
+abstract class AbstractFormComponent implements RenderInterface
 {
     use InitTrait;
 
@@ -23,11 +24,9 @@ abstract class AbstractFormComponent
     protected $attributes = [];
 
     /**
-     * Конструктор
+     * AbstractFormComponent constructor.
      *
      * @param array $settings - настройки объекта
-     *
-     * @throws \ReflectionException
      */
     public function __construct(array $settings)
     {
@@ -52,7 +51,7 @@ abstract class AbstractFormComponent
      * @param string $name - имя атрибута
      * @param string $value - значение атрибута
      */
-    public function addAttribute(string $name, $value): void
+    public function addAttribute(\string $name, $value): void
     {
         $this->attributes[$name] = (string) $value;
     }
@@ -60,9 +59,9 @@ abstract class AbstractFormComponent
     /**
      * Превратить объект в HTML-разметку
      * 
-     * @return mixed
+     * @return \phpQueryObject|null
      */
-    abstract public function render();
+    abstract public function render() : ?\phpQueryObject;
 
     /**
      * Вернуть объект как строку
