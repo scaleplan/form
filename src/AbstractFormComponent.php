@@ -51,7 +51,7 @@ abstract class AbstractFormComponent implements RenderInterface
      * @param string $name - имя атрибута
      * @param string $value - значение атрибута
      */
-    public function addAttribute(\string $name, $value): void
+    public function addAttribute(string $name, $value): void
     {
         $this->attributes[$name] = (string) $value;
     }

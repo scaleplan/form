@@ -42,7 +42,7 @@ class TemplateField extends AbstractField
      *
      * @param string $template
      */
-    public function setTemplate(\string $template): void
+    public function setTemplate(string $template): void
     {
         if (!$template) {
             return;

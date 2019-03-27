@@ -204,7 +204,7 @@ abstract class AbstractField extends AbstractFormComponent
      *
      * @return string
      */
-    public function getName() : \string
+    public function getName() : string
     {
         return $this->name;
     }
@@ -214,7 +214,7 @@ abstract class AbstractField extends AbstractFormComponent
      *
      * @return string
      */
-    public function getType() : \string
+    public function getType() : string
     {
         return $this->type;
     }
