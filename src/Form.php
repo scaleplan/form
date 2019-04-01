@@ -7,6 +7,7 @@ use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\Form\Fields\AbstractField;
 use Scaleplan\Form\Fields\Option;
 use Scaleplan\Form\Fields\TemplateField;
+use Scaleplan\Form\Interfaces\FormInterface;
 use Scaleplan\Form\Interfaces\RenderInterface;
 use Scaleplan\InitTrait\InitTrait;
 use Scaleplan\Form\Fields\FieldFabric;
@@ -17,7 +18,7 @@ use Scaleplan\Form\Fields\FieldFabric;
  * Class Form
  * @package Scaleplan\Form
  */
-class Form implements RenderInterface
+class Form implements RenderInterface, FormInterface
 {
     /**
      * Трейт инициализации
@@ -515,5 +516,23 @@ class Form implements RenderInterface
     public function setTitleText(string $newText): void
     {
         $this->title['text'] = $newText;
+    }
+
+    /**
+     * Добавить поле с идентификатором редактируемого объекта системы
+     *
+     * @param string $id - значение идентификатора объекта
+     * @param int $sectionNumber - номер раздела формы, в который добавлять поле
+     *
+     * @return Form
+     *
+     * @throws \Scaleplan\Form\Exceptions\FieldException
+     * @throws \Scaleplan\Form\Exceptions\FormException
+     * @throws \Scaleplan\Form\Exceptions\RadioVariantException
+     */
+    public function addIdField($id = '', int $sectionNumber = -1) : Form
+    {
+        $field = FieldFabric::getField(['type'  => 'hidden', 'name'  => 'id', 'value' => $id,]);
+        return $this->addField($field, $sectionNumber);
     }
 }
