@@ -42,7 +42,7 @@ class TemplateField extends AbstractField
      *
      * @param string $template
      */
-    public function setTemplate(string $template): void
+    public function setTemplate(string $template) : void
     {
         if (!$template) {
             return;
@@ -60,7 +60,7 @@ class TemplateField extends AbstractField
      *
      * @param string $templatePath - путь
      */
-    public function setTemplatePath(string $templatePath): void
+    public function setTemplatePath(string $templatePath) : void
     {
         $this->templatePath = $templatePath;
     }

@@ -42,7 +42,7 @@ class SwitchField extends AbstractField
      *
      * @param array $variants - список объектов вариантов
      */
-    public function setVariants(array $variants): void
+    public function setVariants(array $variants) : void
     {
         foreach ($variants as $variant) {
             if (!($variant instanceof Variant)) {
@@ -58,7 +58,7 @@ class SwitchField extends AbstractField
      *
      * @param Variant $variant - добавляемый вариант
      */
-    public function addVariant(Variant $variant): void
+    public function addVariant(Variant $variant) : void
     {
         $this->variants[] = $variant;
     }

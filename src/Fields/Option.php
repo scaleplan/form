@@ -34,7 +34,7 @@ class Option extends AbstractFormComponent
      *
      * @return string
      */
-    public function getText(): string
+    public function getText() : string
     {
         return $this->text;
     }
@@ -44,7 +44,7 @@ class Option extends AbstractFormComponent
      *
      * @return string
      */
-    public function getValue(): string
+    public function getValue() : string
     {
         return $this->value;
     }
@@ -54,9 +54,9 @@ class Option extends AbstractFormComponent
      *
      * @param $value - значение
      */
-    public function setValue($value): void
+    public function setValue($value) : void
     {
-        $this->value = (string) $value;
+        $this->value = (string)$value;
     }
 
     /**
@@ -64,9 +64,9 @@ class Option extends AbstractFormComponent
      *
      * @param $text - текст
      */
-    public function setText($text): void
+    public function setText($text) : void
     {
-        $this->text = (string) $text;
+        $this->text = (string)$text;
     }
 
     /**

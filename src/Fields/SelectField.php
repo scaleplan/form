@@ -57,7 +57,7 @@ class SelectField extends AbstractField
      *
      * @param array $options - список объектов элементов
      */
-    public function setOptions(array $options): void
+    public function setOptions(array $options) : void
     {
         foreach ($options as $option) {
             if (!($option instanceof Option)) {
@@ -73,7 +73,7 @@ class SelectField extends AbstractField
      *
      * @param $emptyText - текст
      */
-    public function setEmptyText($emptyText): void
+    public function setEmptyText($emptyText) : void
     {
         $this->emptyText = $emptyText;
     }
@@ -83,7 +83,7 @@ class SelectField extends AbstractField
      *
      * @param $selectedValue - значение
      */
-    public function setSelectedValue($selectedValue): void
+    public function setSelectedValue($selectedValue) : void
     {
         $this->selectedValue = $selectedValue;
     }
@@ -93,7 +93,7 @@ class SelectField extends AbstractField
      *
      * @param Option $option - объект элемента списка
      */
-    public function addOption(Option $option): void
+    public function addOption(Option $option) : void
     {
         $this->options[] = $option;
     }
@@ -120,7 +120,7 @@ class SelectField extends AbstractField
             array_unshift($this->options, new Option(['text' => $this->emptyText]));
         }
 
-        foreach($this->options as $option) {
+        foreach ($this->options as $option) {
             if (
                 $this->selectedValue !== null
                 &&

@@ -75,7 +75,7 @@ class Variant extends AbstractFormComponent
      *
      * @throws RadioVariantException
      */
-    public function setType(string $type): void
+    public function setType(string $type) : void
     {
         if (!\in_array($type, ['radio', 'checkbox'], true)) {
             throw new RadioVariantException('Значением типа может только checkbox и radio');
@@ -112,7 +112,7 @@ class Variant extends AbstractFormComponent
      *
      * @return string
      */
-    public function getValue(): string
+    public function getValue() : string
     {
         return $this->value;
     }

@@ -21,7 +21,7 @@ class FieldWrapper extends AbstractFormComponent
      * @var array
      */
     protected static $settings = [
-        'tag' => 'div'
+        'tag' => 'div',
     ];
 
     /**
@@ -38,7 +38,7 @@ class FieldWrapper extends AbstractFormComponent
      *
      * @throws \Exception
      */
-    public  function render() : ?\phpQueryObject
+    public function render() : ?\phpQueryObject
     {
         $fieldWrapper = phpQuery::pq("<{$this->tag}>");
         FormHelper::renderAttributes($fieldWrapper, $this->attributes);

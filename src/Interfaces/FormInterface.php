@@ -17,13 +17,6 @@ use Scaleplan\Form\Section;
 interface FormInterface
 {
     /**
-     * FormInterface constructor.
-     *
-     * @param array $formConf
-     */
-    public function __construct(array $formConf);
-
-    /**
      * Установить настройки формы
      *
      * @param array $form - настройки формы

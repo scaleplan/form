@@ -351,6 +351,22 @@ class Form implements RenderInterface, FormInterface
     }
 
     /**
+     * @param string $name
+     * @param $value
+     */
+    public function setFieldValue(string $name, $value) : void
+    {
+        foreach ($this->sections as &$section) {
+            foreach ($section->getFields() as &$field) {
+                if ($field->getName() === $name) {
+                    $field->setValue($value);
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
      * Вставка изображений
      *
      * @param AbstractField $field - поле-эталон
