@@ -454,7 +454,7 @@ class Form implements RenderInterface, FormInterface
         $selectedValue = null
     ) : void
     {
-        $search = function (array &$fields) use (&$selectName, &$options, &$emptyText, &$selectedValue) {
+        $search = static function (array &$fields) use (&$selectName, &$options, &$emptyText, &$selectedValue) {
             $result = null;
             foreach ($fields as &$field) {
                 if ($field->getName() !== $selectName) {
@@ -542,9 +542,9 @@ class Form implements RenderInterface, FormInterface
      *
      * @return Form
      *
-     * @throws \Scaleplan\Form\Exceptions\FieldException
-     * @throws \Scaleplan\Form\Exceptions\FormException
-     * @throws \Scaleplan\Form\Exceptions\RadioVariantException
+     * @throws Exceptions\FieldException
+     * @throws Exceptions\RadioVariantException
+     * @throws FormException
      */
     public function addIdField($id = '', int $sectionNumber = -1) : Form
     {

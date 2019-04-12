@@ -40,7 +40,7 @@ abstract class AbstractFormComponent implements RenderInterface
      */
     public function setAttributes(array $attributes): void
     {
-        $this->attributes = array_map(function ($attribute) {
+        $this->attributes = array_map(static function ($attribute) {
             return (string) $attribute;
         }, $attributes);
     }
