@@ -11,6 +11,7 @@ namespace Scaleplan\Form;
  */
 class FormHelper
 {
+    public const STOP_ATTRS = ['labelAfter'];
     /**
      * Добавить атрибуты к элементу
      *
@@ -20,10 +21,14 @@ class FormHelper
      *
      * @return \phpQueryObject|null
      */
-    public static function renderAttributes(\phpQueryObject $el, array $attrs, array $stopAttrs = []) : ?\phpQueryObject
+    public static function renderAttributes(\phpQueryObject $el, array $attrs, array $stopAttrs = self::STOP_ATTRS) : ?\phpQueryObject
     {
         unset($attrs['html'], $attrs['text'], $attrs['value'], $attrs['hint']);
         foreach ($attrs as $attr => $value) {
+            if (\is_array($value)) {
+                $value = implode(',', $value);
+            }
+
             if (!\is_string($attr) || \in_array($attr, $stopAttrs, true)) {
                 continue;
             }

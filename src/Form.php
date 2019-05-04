@@ -5,7 +5,9 @@ namespace Scaleplan\Form;
 use phpQuery;
 use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\Form\Fields\AbstractField;
+use Scaleplan\Form\Fields\OptGroup;
 use Scaleplan\Form\Fields\Option;
+use Scaleplan\Form\Fields\SelectField;
 use Scaleplan\Form\Fields\TemplateField;
 use Scaleplan\Form\Interfaces\FormInterface;
 use Scaleplan\Form\Interfaces\RenderInterface;
@@ -131,31 +133,28 @@ class Form implements RenderInterface, FormInterface
     protected $additionalFields = [];
 
     /**
-     * Конструктор
+     * Form constructor.
      *
      * @param array $formConf - параметры конфигурации
      *
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
+     * @throws FormException
      */
     public function __construct(array $formConf)
     {
         $this->formConf = &$formConf;
 
-        if (!empty($formConf['sections']) && \is_array($formConf['sections'])) {
-            foreach ($formConf['sections'] as &$section) {
-                $section['buttons'] = array_merge($formConf['buttons'] ?? [], $section['buttons'] ?? []);
-                $section = new Section($section);
-            }
-
-            unset($section);
-        } else if (!empty($formConf['fields']) && \is_array($formConf['fields'])) {
-            foreach ($formConf['fields'] as &$field) {
-                $field = FieldFabric::getField($field);
-            }
-
-            unset($field);
+        if (empty($formConf['sections']) || !\is_array($formConf['sections'])) {
+            throw new FormException('Не заданы разделы формы');
         }
+
+        foreach ($formConf['sections'] as &$section) {
+            $section['buttons'] = array_merge($formConf['buttons'] ?? [], $section['buttons'] ?? []);
+            $section = new Section($section);
+        }
+
+        unset($section);
 
         $this->initObject($formConf);
     }
@@ -165,7 +164,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @param array $form - настройки формы
      */
-    public function setForm(array $form): void
+    public function setForm(array $form) : void
     {
         $form['method'] = 'POST';
         $this->form = $form;
@@ -176,7 +175,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @param array $sections
      */
-    public function setSections(array $sections): void
+    public function setSections(array $sections) : void
     {
         foreach ($sections as $section) {
             if (!($section instanceof Section)) {
@@ -192,7 +191,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @param Section $section
      */
-    public function addSection(Section $section): void
+    public function addSection(Section $section) : void
     {
         $this->sections[$section->getTitle()] = $section;
     }
@@ -208,7 +207,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @throws FormException
      */
-    public function addField(AbstractField $field, int $sectionNumber = -1, bool $isAppend = true): Form
+    public function addField(AbstractField $field, int $sectionNumber = -1, bool $isAppend = true) : Form
     {
         if ($this->sections) {
             if ($sectionNumber === -1) {
@@ -239,7 +238,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @throws FormException
      */
-    public function appendField(AbstractField $field, int $sectionNumber = -1): Form
+    public function appendField(AbstractField $field, int $sectionNumber = -1) : Form
     {
         return $this->addField($field, $sectionNumber);
     }
@@ -254,7 +253,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @throws FormException
      */
-    public function prependField(AbstractField $field, int $sectionNumber = -1): Form
+    public function prependField(AbstractField $field, int $sectionNumber = -1) : Form
     {
         return $this->addField($field, $sectionNumber, false);
     }
@@ -264,7 +263,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @param array $fields
      */
-    public function setFields(array $fields): void
+    public function setFields(array $fields) : void
     {
         foreach ($fields as $field) {
             if (!($field instanceof AbstractField)) {
@@ -300,7 +299,7 @@ class Form implements RenderInterface, FormInterface
             FormHelper::renderAttributes($menu, $this->menu);
             $title->after($menu);
 
-            foreach($this->sections as $title => $section) {
+            foreach ($this->sections as $title => $section) {
                 if ($title === array_keys($this->sections)[static::ADDITIONAL_FIELDS_SECTION_NUMBER]) {
                     $section = clone $section;
                     $section->setFields(array_merge($this->additionalFields, $section->getFields()));
@@ -310,7 +309,7 @@ class Form implements RenderInterface, FormInterface
                 $menu->append((new MenuElement(['text' => $title, 'hash' => $section->getId() ? '#' . $section->getId() : '']))->render());
             }
         } else {
-            foreach($this->fields as $name => $field) {
+            foreach ($this->fields as $field) {
                 $form->append($field->render());
             }
         }
@@ -332,7 +331,7 @@ class Form implements RenderInterface, FormInterface
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
      */
-    public function setFormValues(array $valuesObject): void
+    public function setFormValues(array $valuesObject) : void
     {
         foreach ($this->sections as $section) {
             foreach ($section->getFields() as $field) {
@@ -378,7 +377,7 @@ class Form implements RenderInterface, FormInterface
      * @throws Exceptions\RadioVariantException
      * @throws \Exception
      */
-    protected function setFileValue(AbstractField $field, $value): ?AbstractField
+    protected function setFileValue(AbstractField $field, $value) : ?AbstractField
     {
         if (!$value || $field->getType() !== 'file') {
             return null;
@@ -409,11 +408,11 @@ class Form implements RenderInterface, FormInterface
 
             $newField = FieldFabric::getField(
                 [
-                    'type' => 'hidden',
-                    'name' => $this->fileNamePrefix . $name,
+                    'type'  => 'hidden',
+                    'name'  => $this->fileNamePrefix . $name,
                     //'data-poster' => $file[$this->filePosterKey],
                     //'data-name' => $file[$this->fileNameKey],
-                    'value' => $file[$this->filePathKey]
+                    'value' => $file[$this->filePathKey],
                 ]
             );
 
@@ -445,27 +444,48 @@ class Form implements RenderInterface, FormInterface
      * @param string $selectName - имя списка
      * @param array $options - элементы списка
      * @param string $emptyText - текст пустого пункта
-     * @param mixed $selectedValue - элемент по умолчанию
+     * @param array $selectedValue - элемент по умолчанию
+     * @param string $optGroupClass - в какую группу добавлять
      */
     public function setSelectOptions(
         string $selectName,
         array $options,
-        string $emptyText = null,
-        $selectedValue = null
+        string $emptyText = '',
+        array $selectedValue = [],
+        string $optGroupClass = null
     ) : void
     {
-        $search = static function (array &$fields) use (&$selectName, &$options, &$emptyText, &$selectedValue) {
+        $search = static function (array $fields)
+        use (&$selectName, &$options, &$emptyText, &$selectedValue, &$optGroupClass) {
+
             $result = null;
+            /** @var SelectField $field */
             foreach ($fields as &$field) {
                 if ($field->getName() !== $selectName) {
                     continue;
+                }
+
+                $optionList = $field->getOptionList();
+                if ($optGroupClass) {
+                    if (!$field->getOptGroups()) {
+                        return;
+                    }
+
+                    foreach ($field->getOptGroups() as $fieldGroup) {
+                        if (!$fieldGroup->hasClass($optGroupClass)) {
+                            continue;
+                        }
+
+                        $optionList = $fieldGroup->getOptionList();
+                        break;
+                    }
                 }
 
                 $field->setEmptyText($emptyText);
                 $field->setSelectedValue($selectedValue);
                 foreach ($options as $option) {
                     $option = new Option($option);
-                    $field->addOption($option);
+                    $optionList->addOption($option);
                 }
             }
         };
@@ -487,7 +507,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @param string $newAction - новое значение action
      */
-    public function setFormAction(string $newAction): void
+    public function setFormAction(string $newAction) : void
     {
         $this->form['action'] = $newAction;
     }
@@ -497,7 +517,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @return array
      */
-    public function getFormConf(): array
+    public function getFormConf() : array
     {
         return $this->formConf;
     }
@@ -509,9 +529,9 @@ class Form implements RenderInterface, FormInterface
      *
      * @throws \Exception
      */
-    public function __toString(): string
+    public function __toString() : string
     {
-        return (string) $this->render();
+        return (string)$this->render();
     }
 
     /**
@@ -519,7 +539,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @return string
      */
-    public function getTitleText(): string
+    public function getTitleText() : string
     {
         return $this->title['text'] ?? '';
     }
@@ -529,7 +549,7 @@ class Form implements RenderInterface, FormInterface
      *
      * @param string $newText
      */
-    public function setTitleText(string $newText): void
+    public function setTitleText(string $newText) : void
     {
         $this->title['text'] = $newText;
     }
@@ -548,7 +568,7 @@ class Form implements RenderInterface, FormInterface
      */
     public function addIdField($id = '', int $sectionNumber = -1) : Form
     {
-        $field = FieldFabric::getField(['type'  => 'hidden', 'name'  => 'id', 'value' => $id,]);
+        $field = FieldFabric::getField(['type' => 'hidden', 'name' => 'id', 'value' => $id,]);
         return $this->addField($field, $sectionNumber);
     }
 }

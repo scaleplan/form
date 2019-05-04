@@ -14,7 +14,7 @@ class FieldFabric
     /**
      * @param array $settings
      *
-     * @return HiddenField|InputField|SelectField|SwitchField|TextareaField
+     * @return HiddenField|InputField|SelectField|SwitchField|TextareaField|TemplateField
      *
      * @throws \Scaleplan\Form\Exceptions\FieldException
      * @throws \Scaleplan\Form\Exceptions\RadioVariantException
@@ -35,6 +35,9 @@ class FieldFabric
 
             case 'hidden':
                 return new HiddenField($settings);
+
+            case 'template':
+                return new TemplateField($settings);
 
             default:
                 return new InputField($settings);

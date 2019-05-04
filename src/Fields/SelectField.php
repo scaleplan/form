@@ -21,9 +21,9 @@ class SelectField extends AbstractField
     /**
      * Элементы выпадающего списка
      *
-     * @var array
+     * @var OptionList
      */
-    protected $options = [];
+    protected $optionList;
 
     /**
      * Значение выбранного элемента списка по умолчанию
@@ -31,6 +31,11 @@ class SelectField extends AbstractField
      * @var string
      */
     protected $selectedValue = '';
+
+    /**
+     * @var OptGroup[]
+     */
+    protected $optGroups = [];
 
     /**
      * SelectField constructor.
@@ -41,31 +46,33 @@ class SelectField extends AbstractField
      */
     public function __construct(array $settings)
     {
-        if (!empty($settings['options']) && \is_array($settings['options'])) {
-            foreach ($settings['options'] as &$option) {
-                $option = new Option($option);
+        if (isset($settings['optgroups']) && \is_array($settings['optgroups'])) {
+            foreach ($settings['optgroups'] as $optgroup) {
+                $this->optGroups[] = new OptGroup($optgroup);
             }
-
-            unset($option);
+        } else {
+            $this->optionList = new OptionList($settings['options'] ?? []);
         }
+
+        unset($settings['optgroups'], $settings['options']);
 
         parent::__construct($settings);
     }
 
     /**
-     * Установить элементы выпадающего списка
-     *
-     * @param array $options - список объектов элементов
+     * @return OptionList
      */
-    public function setOptions(array $options) : void
+    public function getOptionList() : OptionList
     {
-        foreach ($options as $option) {
-            if (!($option instanceof Option)) {
-                continue;
-            }
+        return $this->optionList;
+    }
 
-            $this->options[] = $option;
-        }
+    /**
+     * @return OptGroup[]
+     */
+    public function getOptGroups() : array
+    {
+        return $this->optGroups;
     }
 
     /**
@@ -89,16 +96,6 @@ class SelectField extends AbstractField
     }
 
     /**
-     * Добавить элемент выпадающего списка
-     *
-     * @param Option $option - объект элемента списка
-     */
-    public function addOption(Option $option) : void
-    {
-        $this->options[] = $option;
-    }
-
-    /**
      * Отрендерить поле выпадающего списка
      *
      * @return null|\phpQueryObject
@@ -116,24 +113,22 @@ class SelectField extends AbstractField
         $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 
-        if ($this->emptyText !== null) {
-            array_unshift($this->options, new Option(['text' => $this->emptyText]));
+        if (!$this->optGroups
+            && $this->emptyText !== null
+            && !isset($this->attributes['multiple'])
+            && $this->optionList->count()) {
+
+            $this->optionList->unshiftOption(new Option(['text' => $this->emptyText]));
         }
 
-        foreach ($this->options as $option) {
-            if (
-                $this->selectedValue !== null
-                &&
-                (
-                    $this->selectedValue == $option->getValue()
-                    ||
-                    $this->selectedValue == $option->getText()
-                )
-            ) {
-                $option->addAttribute('selected', 'selected');
+        if ($this->optGroups) {
+            foreach ($this->optGroups as $optGroup) {
+                $optGroup->getOptionList()->setSelectedValue($this->selectedValue);
+                $optGroup->render()->appendTo($field);
             }
-
-            $option->render()->appendTo($field);
+        } elseif ($this->optionList) {
+            $this->optionList->setSelectedValue($this->selectedValue);
+            $this->optionList->addToElement($field);
         }
 
         return $this->renderEnding($field);

@@ -72,11 +72,11 @@ class Option extends AbstractFormComponent
     /**
      * Отрендерить элемент списка
      *
-     * @return \phpQueryObject|null
+     * @return \phpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : \phpQueryObject
     {
         $option = phpQuery::pq('<option>');
         $option->text($this->text ?: $this->value);

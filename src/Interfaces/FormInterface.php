@@ -106,9 +106,16 @@ interface FormInterface
      * @param string $selectName - имя списка
      * @param array $options - элементы списка
      * @param string $emptyText - текст пустого пункта
-     * @param mixed $selectedValue - элемент по умолчанию
+     * @param array $selectedValue - элемент по умолчанию
+     * @param string $optGroupClass - в какую группу добавлять
      */
-    public function setSelectOptions(string $selectName, array $options, string $emptyText = null, $selectedValue = null) : void;
+    public function setSelectOptions(
+        string $selectName,
+        array $options,
+        string $emptyText = '',
+        array $selectedValue = [],
+        string $optGroupClass = null
+    ) : void;
 
     /**
      * Установить параметр action формы

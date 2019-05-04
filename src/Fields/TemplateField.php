@@ -21,7 +21,7 @@ class TemplateField extends AbstractField
      *
      * @var string
      */
-    protected $templatePath = '/views/private/forms/templates';
+    protected $templatePath = '/bundles/app/Views/private/forms/templates';
 
     /**
      * Имя файла шаблона поля
@@ -82,7 +82,7 @@ class TemplateField extends AbstractField
             $_SERVER['DOCUMENT_ROOT'] . $this->templatePath . '/' . $this->template
         );
         $renderedTemplate->find('*[data-view]')->attr('data-view', $this->name);
-        $field = $renderedTemplate->find('select, input, textarea');
+        $field = $renderedTemplate->find('select, input, textarea')->filter(':first');
         $field->val($this->value);
         $field->attr('name', $this->name);
         $renderedTemplate->find('label')->text($this->labelText);

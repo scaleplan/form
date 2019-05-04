@@ -50,6 +50,7 @@ abstract class AbstractField extends AbstractFormComponent
         'month',
         'week',
         'hidden',
+        'template',
     ];
 
     /**
@@ -131,9 +132,7 @@ abstract class AbstractField extends AbstractFormComponent
         }
 
         if (!empty($settings['fieldWrapper'])) {
-            $settings['fieldWrapper'] = new FieldWrapper(
-                $settings['fieldWrapper'] + ['required' => $field['required'] ?? '']
-            );
+            $settings['fieldWrapper'] = new FieldWrapper($settings['fieldWrapper']);
         }
 
         if (empty($settings['id'])) {
