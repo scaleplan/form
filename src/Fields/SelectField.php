@@ -46,13 +46,11 @@ class SelectField extends AbstractField
      */
     public function __construct(array $settings)
     {
-        if (isset($settings['optgroups']) && \is_array($settings['optgroups'])) {
-            foreach ($settings['optgroups'] as $optgroup) {
-                $this->optGroups[] = new OptGroup($optgroup);
-            }
-        } else {
-            $this->optionList = new OptionList($settings['options'] ?? []);
+        foreach ($settings['optgroups'] ?? [] as $optgroup) {
+            $this->optGroups[] = new OptGroup($optgroup);
         }
+
+        $this->optionList = new OptionList($settings['options'] ?? []);
 
         unset($settings['optgroups'], $settings['options']);
 
