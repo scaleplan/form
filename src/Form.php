@@ -156,6 +156,10 @@ class Form implements RenderInterface, FormInterface
 
         unset($section);
 
+        if (isset($formConf['labelAfter'])) {
+            AbstractField::setSetting('labelAfter', $formConf['labelAfter']);
+        }
+
         $this->initObject($formConf);
     }
 

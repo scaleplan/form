@@ -117,6 +117,13 @@ abstract class AbstractField extends AbstractFormComponent
     protected $fieldWrapper;
 
     /**
+     * Поставить метку после поля
+     *
+     * @var bool
+     */
+    protected $labelAfter;
+
+    /**
      * Конструктор
      *
      * @param array $settings - настройки объекта
@@ -125,6 +132,10 @@ abstract class AbstractField extends AbstractFormComponent
      */
     public function __construct(array $settings)
     {
+        if (empty($settings['type'])) {
+            throw new FieldException('Не задан тип поля');
+        }
+
         $this->setType($settings['type']);
 
         if (empty($settings['name'])) {
@@ -280,7 +291,7 @@ abstract class AbstractField extends AbstractFormComponent
         $label = $this->renderLabel();
         $hint = $this->renderFieldHint();
 
-        if (!empty(static::$settings['labelAfter'])) {
+        if (!empty($this->labelAfter ?? static::$settings['labelAfter'])) {
             $elements = [$field, $hint, $label];
         } else {
             $elements = [$label, $field, $hint];
