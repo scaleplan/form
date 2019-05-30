@@ -454,7 +454,7 @@ class Form implements RenderInterface, FormInterface
     public function setSelectOptions(
         string $selectName,
         array $options,
-        string $emptyText = '',
+        ?string $emptyText = '',
         array $selectedValue = [],
         string $optGroupClass = null
     ) : void
@@ -491,6 +491,37 @@ class Form implements RenderInterface, FormInterface
                     $option = new Option($option);
                     $optionList->addOption($option);
                 }
+            }
+        };
+
+        if ($this->sections) {
+            $result = null;
+            foreach ($this->sections as $section) {
+                $fields = $section->getFields();
+                $search($fields);
+                $section->setFields($fields);
+            }
+        }
+
+        $search($this->fields);
+    }
+
+    /**
+     * @param string $selectName
+     * @param array $selectedValue
+     */
+    public function setSelectedValue(string $selectName, array $selectedValue = []) : void
+    {
+        $search = static function (array $fields) use (&$selectName, &$selectedValue) {
+
+            $result = null;
+            /** @var SelectField $field */
+            foreach ($fields as &$field) {
+                if ($field->getName() !== $selectName) {
+                    continue;
+                }
+
+                $field->setSelectedValue($selectedValue);
             }
         };
 
