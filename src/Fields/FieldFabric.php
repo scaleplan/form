@@ -9,7 +9,7 @@ namespace Scaleplan\Form\Fields;
  */
 class FieldFabric
 {
-    public const DEFAULT_TYPE = 'text';
+    public const DEFAULT_TYPE = AbstractField::TEXT;
 
     /**
      * @param array $settings
@@ -23,20 +23,20 @@ class FieldFabric
     {
         $type = $settings['type'] ?: static::DEFAULT_TYPE;
         switch ($type) {
-            case 'select':
+            case AbstractField::SELECT:
                 return new SelectField($settings);
 
-            case 'textarea':
+            case AbstractField::TEXTAREA:
                 return new TextareaField($settings);
 
-            case 'checkbox':
-            case 'radio':
+            case AbstractField::CHECKBOX:
+            case AbstractField::RADIO:
                 return new SwitchField($settings);
 
-            case 'hidden':
+            case AbstractField::HIDDEN:
                 return new HiddenField($settings);
 
-            case 'template':
+            case AbstractField::TEMPLATE:
                 return new TemplateField($settings);
 
             default:

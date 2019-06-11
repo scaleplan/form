@@ -26,31 +26,55 @@ abstract class AbstractField extends AbstractFormComponent
         'labelAfter'    => true,
     ];
 
+    public const TEXT           = 'text';
+    public const SELECT         = 'select';
+    public const TEXTAREA       = 'textarea';
+    public const RADIO          = 'radio';
+    public const PASSWORD       = 'password';
+    public const FILE           = 'file';
+    public const CHECKBOX       = 'checkbox';
+    public const DATE           = 'date';
+    public const DATETIME       = 'datetime';
+    public const COLOR          = 'color';
+    public const DATETIME_LOCAL = 'datetime-local';
+    public const EMAIL          = 'email';
+    public const NUMBER         = 'number';
+    public const RANGE          = 'range';
+    public const SEARCH         = 'search';
+    public const TEL            = 'tel';
+    public const TIME           = 'time';
+    public const URL            = 'url';
+    public const MONTH          = 'month';
+    public const WEEK           = 'week';
+    public const HIDDEN         = 'hidden';
+    public const TEMPLATE       = 'template';
+
     /**
      * Доступные виды полей ввода
      */
-    protected const ALLOWED_TYPES = [
-        'text',
-        'select',
-        'textarea',
-        'radio',
-        'password',
-        'file',
-        'date',
-        'datetime',
-        'color',
-        'datetime-local',
-        'email',
-        'number',
-        'range',
-        'search',
-        'tel',
-        'time',
-        'url',
-        'month',
-        'week',
-        'hidden',
-        'template',
+    public const ALLOWED_TYPES = [
+        self::TEXT,
+        self::SELECT,
+        self::TEXTAREA,
+        self::RADIO,
+        self::PASSWORD,
+        self::FILE,
+        self::CHECKBOX,
+        self::DATE,
+        self::DATETIME,
+        self::COLOR,
+        self::DATETIME_LOCAL,
+        self::EMAIL,
+        self::NUMBER,
+        self::RANGE,
+        self::SEARCH,
+        self::TEL,
+        self::TIME,
+        self::URL,
+        self::MONTH,
+        self::WEEK,
+        self::HIDDEN,
+        self::TEMPLATE,
     ];
 
     /**
@@ -58,7 +82,7 @@ abstract class AbstractField extends AbstractFormComponent
      *
      * @var string
      */
-    protected $type = 'text';
+    protected $type = self::TEXT;
 
     /**
      * Имя поля
@@ -280,13 +304,13 @@ abstract class AbstractField extends AbstractFormComponent
     }
 
     /**
-     * @param \phpQueryObject $field
+     * @param \phpQueryObject|\phpQueryObject[] $field
      *
      * @return null|\phpQueryObject
      *
      * @throws \Exception
      */
-    protected function renderEnding(\phpQueryObject $field) : ?\phpQueryObject
+    protected function renderEnding($field) : ?\phpQueryObject
     {
         $label = $this->renderLabel();
         $hint = $this->renderFieldHint();
@@ -297,20 +321,32 @@ abstract class AbstractField extends AbstractFormComponent
             $elements = [$label, $field, $hint];
         }
 
-        if (!$this->fieldWrapper) {
-            $object = \phpQuery::pq('<div>');
-            foreach ($elements as $el) {
-                $object->append($el);
+        $append = static function ($el, \phpQueryObject $parent) {
+            if (!\is_array($el)) {
+                $parent->append($el);
             }
 
-            return $object;
+            foreach ($el as $variant) {
+                $parent->append($variant);
+            }
+
+            return $parent;
+        };
+
+        if (!$this->fieldWrapper) {
+            $parent = \phpQuery::pq('<div>');
+            foreach ($elements as $el) {
+                $append($el, $parent);
+            }
+
+            return $parent;
         }
 
         $fieldWrapper = $this->fieldWrapper->render();
 
         foreach ($elements as $el) {
-            if ($fieldWrapper) {
-                $fieldWrapper->append($el);
+            if ($fieldWrapper && $el) {
+                $append($el, $fieldWrapper);
             }
         }
 

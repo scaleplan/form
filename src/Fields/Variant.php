@@ -5,7 +5,6 @@ namespace Scaleplan\Form\Fields;
 use phpQuery;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\RadioVariantException;
-use Scaleplan\Form\FormHelper;
 
 /**
  * Класс вариантов радио-кнопки
@@ -28,7 +27,7 @@ class Variant extends AbstractFormComponent
      *
      * @var string
      */
-    protected $labelText = '';
+    protected $text = '';
 
     /**
      * Имя переключателя
@@ -45,6 +44,11 @@ class Variant extends AbstractFormComponent
     protected $value = '';
 
     /**
+     * @var bool
+     */
+    protected $checked = false;
+
+    /**
      * Конструктор
      *
      * @param array $settings - настройки объекта
@@ -53,19 +57,19 @@ class Variant extends AbstractFormComponent
      */
     public function __construct(array $settings)
     {
-        if (empty($settings['type'])) {
-            throw new RadioVariantException('Не задан тип переключателя');
-        }
-
-        if (empty($settings['name'])) {
-            throw new RadioVariantException('Не задано имя');
-        }
-
-        if (empty($settings['labelText'])) {
+        if (empty($settings['text'])) {
             throw new RadioVariantException('Не задан текст метки');
         }
 
         parent::__construct($settings);
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name) : void
+    {
+        $this->name = $name;
     }
 
     /**
@@ -77,11 +81,19 @@ class Variant extends AbstractFormComponent
      */
     public function setType(string $type) : void
     {
-        if (!\in_array($type, ['radio', 'checkbox'], true)) {
+        if (!\in_array($type, [SwitchField::RADIO, SwitchField::CHECKBOX], true)) {
             throw new RadioVariantException('Значением типа может только checkbox и radio');
         }
 
         $this->type = $type;
+    }
+
+    /**
+     * @param bool $checked
+     */
+    public function setChecked(bool $checked) : void
+    {
+        $this->checked = $checked;
     }
 
     /**
@@ -96,15 +108,17 @@ class Variant extends AbstractFormComponent
         $field = phpQuery::pq('<input>');
         $field->attr('type', $this->type);
         $field->attr('name', $this->name);
+        $field->val($this->value);
+
+        $span = phpQuery::pq('<span>');
+        $span->text($this->text);
+        //FormHelper::renderAttributes($label, $this->attributes);
 
         $label = phpQuery::pq('<label>');
-        $label->text($this->labelText);
+        $label->append($field);
+        $label->append($span);
 
-        $field->after($label);
-
-        FormHelper::renderAttributes($label, $this->attributes, ['type']);
-
-        return $field;
+        return $label;
     }
 
     /**

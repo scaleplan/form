@@ -2,6 +2,9 @@
 
 namespace Scaleplan\Form\Fields;
 
+use phpQuery;
+use Scaleplan\Form\Exceptions\FieldException;
+
 /**
  * Class SwitchField
  *
@@ -9,6 +12,8 @@ namespace Scaleplan\Form\Fields;
  */
 class SwitchField extends AbstractField
 {
+    public const ALLOWED_TYPES = [self::RADIO, self::CHECKBOX,];
+
     /**
      * Варианты радио-баттона
      *
@@ -72,21 +77,28 @@ class SwitchField extends AbstractField
      */
     public function render() : ?\phpQueryObject
     {
-        if (!\in_array($this->type, ['radio', 'checkbox'], true)) {
-            return null;
+        $value = $this->value;
+        if (\is_array($this->value)) {
+            $this->setType(self::CHECKBOX);
+        } else {
+            $this->setType(self::RADIO);
+            $value = [$value];
         }
 
-        /** @var \phpQueryObject $field */
-        $field = array_shift($this->variants)->render();
+        foreach ($this->variants as $index => $variant) {
+            $variant->setType($this->type);
+            $variant->setName($this->name);
 
-        foreach ($this->variants as $variant) {
-            if ($variant->getValue() === $this->value) {
-                $variant->addAttribute('checked', 'checked');
+            if (\in_array($variant->getValue(), $value, true)) {
+                $variant->setChecked(true);
             }
-
-            $field->after($variant->render());
         }
 
-        return $this->renderEnding($field);
+        $variants = [];
+        foreach ($this->variants as $variant) {
+            $variants[] = $variant->render();
+        }
+
+        return $this->renderEnding($variants);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Scaleplan\Form\Fields;
 
+use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
 
 /**
@@ -20,10 +21,6 @@ class InputField extends AbstractField
      */
     public function render() : ?\phpQueryObject
     {
-        if (\in_array($this->getType(), ['radio', 'textarea', 'select', 'hidden'], true)) {
-            return null;
-        }
-
         $field = \phpQuery::pq('<input>')->attr('type', $this->getType());
         $field->val($this->value);
         $field->attr('name', $this->getName());
@@ -31,5 +28,25 @@ class InputField extends AbstractField
         FormHelper::renderAttributes($field, $this->attributes);
 
         return $this->renderEnding($field);
+    }
+
+    /**
+     * Установить тип поля
+     *
+     * @param string $type - тип
+     *
+     * @throws FieldException
+     */
+    public function setType(string $type) : void
+    {
+        if (\in_array(
+            $type,
+            [self::RADIO, self::CHECKBOX, self::TEXTAREA, self::SELECT, self::HIDDEN, self::TEMPLATE],
+            true)
+        ) {
+            throw new FieldException("Тип $type не поддерживается для однострочных текстовых полей.");
+        }
+
+        $this->type = $type;
     }
 }

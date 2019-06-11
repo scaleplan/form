@@ -76,7 +76,7 @@ class OptionList
     /**
      * @param $selectedValue
      */
-    protected function setSelectedIfEqual($selectedValue)
+    protected function setSelectedIfEqual($selectedValue) : void
     {
         foreach ($this->options as $option) {
             if ($selectedValue !== null

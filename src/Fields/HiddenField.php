@@ -11,6 +11,8 @@ use Scaleplan\Form\FormHelper;
  */
 class HiddenField extends AbstractField
 {
+    public const ALLOWED_TYPES = [self::HIDDEN,];
+
     /**
      * Отрендерить скрытое поле ввода
      *
@@ -20,11 +22,7 @@ class HiddenField extends AbstractField
      */
     public function render() : ?\phpQueryObject
     {
-        if ($this->getType() !== 'hidden') {
-            return null;
-        }
-
-        $field = \phpQuery::pq('<input>')->attr('type', 'hidden');
+        $field = \phpQuery::pq('<input>')->attr('type', self::HIDDEN);
         if (!\is_array($this->value)) {
             $this->value = [$this->value];
         }

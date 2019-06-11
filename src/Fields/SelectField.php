@@ -102,10 +102,6 @@ class SelectField extends AbstractField
      */
     public function render() : ?\phpQueryObject
     {
-        if ($this->getType() !== 'select') {
-            return null;
-        }
-
         $field = \phpQuery::pq('<select>');
         $field->val($this->value);
         $field->attr('name', $this->getName());

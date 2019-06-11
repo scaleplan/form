@@ -20,10 +20,6 @@ class TextareaField extends AbstractField
      */
     public function render() : ?\phpQueryObject
     {
-        if ($this->type !== 'textarea') {
-            return null;
-        }
-
         $field = \phpQuery::pq('<textarea>');
         $field->val($this->value);
         $field->attr('name', $this->getName());
