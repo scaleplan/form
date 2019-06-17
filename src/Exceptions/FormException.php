@@ -10,6 +10,7 @@ namespace Scaleplan\Form\Exceptions;
 class FormException extends \Exception
 {
     public const MESSAGE = 'Form constructor error.';
+    public const CODE = 500;
 
     /**
      * FormException constructor.
@@ -20,6 +21,6 @@ class FormException extends \Exception
      */
     public function __construct(string $message = '', int $code = 0, \Throwable $previous = null)
     {
-        parent::__construct($message ?: static::MESSAGE, $code, $previous);
+        parent::__construct($message ?: static::MESSAGE, $code ?: static::CODE, $previous);
     }
 }

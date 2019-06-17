@@ -7,7 +7,7 @@ namespace Scaleplan\Form\Exceptions;
  *
  * @package Scaleplan\Form\Exceptions
  */
-class RadioVariantException extends FormException
+class RadioVariantException extends ConfigException
 {
     public const MESSAGE = 'Radio button build error.';
 }

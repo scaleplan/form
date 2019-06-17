@@ -7,7 +7,7 @@ namespace Scaleplan\Form\Exceptions;
  *
  * @package Scaleplan\Form\Exceptions
  */
-class MenuException extends FormException
+class MenuException extends ConfigException
 {
     public const MESSAGE = 'Menu element build error.';
 }
