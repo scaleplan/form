@@ -26,13 +26,6 @@ class SelectField extends AbstractField
     protected $optionList;
 
     /**
-     * Значение выбранного элемента списка по умолчанию
-     *
-     * @var string
-     */
-    protected $selectedValue = '';
-
-    /**
      * @var OptGroup[]
      */
     protected $optGroups = [];
@@ -84,16 +77,6 @@ class SelectField extends AbstractField
     }
 
     /**
-     * Установить значение элемента списка, выбираемого по умолчанию
-     *
-     * @param $selectedValue - значение
-     */
-    public function setSelectedValue($selectedValue) : void
-    {
-        $this->selectedValue = $selectedValue;
-    }
-
-    /**
      * Отрендерить поле выпадающего списка
      *
      * @return null|\phpQueryObject
@@ -117,11 +100,11 @@ class SelectField extends AbstractField
 
         if ($this->optGroups) {
             foreach ($this->optGroups as $optGroup) {
-                $optGroup->getOptionList()->setSelectedValue($this->selectedValue);
+                $optGroup->getOptionList()->setSelectedValue($this->value);
                 $optGroup->render()->appendTo($field);
             }
         } elseif ($this->optionList) {
-            $this->optionList->setSelectedValue($this->selectedValue);
+            $this->optionList->setSelectedValue($this->value);
             $this->optionList->addToElement($field);
         }
 

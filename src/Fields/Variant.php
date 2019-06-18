@@ -5,6 +5,7 @@ namespace Scaleplan\Form\Fields;
 use phpQuery;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\RadioVariantException;
+use Scaleplan\Form\FormHelper;
 
 /**
  * Класс вариантов радио-кнопки
@@ -112,7 +113,7 @@ class Variant extends AbstractFormComponent
 
         $span = phpQuery::pq('<span>');
         $span->text($this->text);
-        //FormHelper::renderAttributes($label, $this->attributes);
+        FormHelper::renderAttributes($field, $this->attributes);
 
         $label = phpQuery::pq('<label>');
         $label->append($field);

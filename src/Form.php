@@ -486,7 +486,7 @@ class Form implements RenderInterface, FormInterface
                 }
 
                 $field->setEmptyText($emptyText);
-                $field->setSelectedValue($selectedValue);
+                $field->setValue($selectedValue);
                 foreach ($options as $option) {
                     $option = new Option($option);
                     $optionList->addOption($option);
@@ -521,7 +521,7 @@ class Form implements RenderInterface, FormInterface
                     continue;
                 }
 
-                $field->setSelectedValue($selectedValue);
+                $field->setValue($selectedValue);
             }
         };
 
