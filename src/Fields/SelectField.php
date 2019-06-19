@@ -86,7 +86,7 @@ class SelectField extends AbstractField
     public function render() : ?\phpQueryObject
     {
         $field = \phpQuery::pq('<select>');
-        $field->val($this->value);
+        //$field->val($this->value);
         $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
 

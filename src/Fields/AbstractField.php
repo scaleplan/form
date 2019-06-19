@@ -101,9 +101,9 @@ abstract class AbstractField extends AbstractFormComponent
     /**
      * Значение поля
      *
-     * @var string
+     * @var string|array
      */
-    protected $value = '';
+    protected $value;
 
     /**
      * Текст подсказки поля
@@ -210,7 +210,7 @@ abstract class AbstractField extends AbstractFormComponent
      */
     public function setValue($value) : void
     {
-        $this->value = (string)$value;
+        $this->value = $value;
     }
 
     /**
