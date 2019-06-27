@@ -5,6 +5,7 @@ namespace Scaleplan\Form;
 use phpQuery;
 use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\Form\Fields\AbstractField;
+use Scaleplan\Form\Fields\HiddenField;
 use Scaleplan\Form\Fields\OptGroup;
 use Scaleplan\Form\Fields\Option;
 use Scaleplan\Form\Fields\SelectField;
@@ -324,6 +325,31 @@ class Form implements RenderInterface, FormInterface
             $menu->find('a')->eq($visibleNumber)->addClass($this->formConf['currentClass']);
         }
 
+
+        $dataViews = [];
+        /** @var HiddenField $field */
+        foreach ($this->additionalFields as $field) {
+            if (!$dataViews[$field->getName()]) {
+                $name = \str_replace($this->fileNamePrefix, '', $field->getName());
+                $dataViews[$field->getName()] = $form->find("*[data-view='$name']");
+            }
+
+            /** @var \phpQueryObject $dataView */
+            $dataView = $dataViews[$field->getName()];
+            if ((string)$dataView) {
+                $clone = $dataView->clone();
+                $clone->removeClass('no-image');
+                $clone->removeClass('no-display');
+                $clone->attr('src', $field->getAttribute('data-poster') ?: $field->getValue());
+                $clone->attr('data-object-src', $field->getValue());
+                $clone->attr('title', $field->getAttribute('data-name'));
+                $clone->attr('data-source', $field->getName());
+
+                $dataView->after($clone);
+                $dataView = $clone;
+            }
+        }
+
         return $formDocument;
     }
 
@@ -383,7 +409,7 @@ class Form implements RenderInterface, FormInterface
      */
     protected function setFileValue(AbstractField $field, $value) : ?AbstractField
     {
-        if (!$value || $field->getType() !== 'file') {
+        if (!$value || !\in_array($field->getType(), [AbstractField::TEMPLATE, AbstractField::FILE,], true)) {
             return null;
         }
 
@@ -405,38 +431,27 @@ class Form implements RenderInterface, FormInterface
         }
         foreach ($value as $file) {
             if (empty($file[$this->filePathKey])) {
-                continue;
+                if (!\is_string($file)) {
+                    continue;
+                }
+
+                $file = [$this->filePathKey => $file];
             }
 
             $file[$this->filePosterKey] = $file[$this->filePosterKey] ?? '';
+            $file[$this->fileNameKey] = $file[$this->fileNameKey] ?? '';
 
             $newField = FieldFabric::getField(
                 [
                     'type'  => 'hidden',
                     'name'  => $this->fileNamePrefix . $name,
-                    //'data-poster' => $file[$this->filePosterKey],
-                    //'data-name' => $file[$this->fileNameKey],
+                    'data-poster' => $file[$this->filePosterKey],
+                    'data-name' => $file[$this->fileNameKey],
                     'value' => $file[$this->filePathKey],
                 ]
             );
 
             $this->additionalFields[] = $newField;
-            if ($dataView) {
-                $clone = $dataView->clone();
-                $clone->removeClass('no-image');
-                $clone->attr('src', $file[$this->filePosterKey]);
-                $clone->attr('data-object-src', $file[$this->filePathKey]);
-                $clone->attr('title', $file[$this->fileNameKey]);
-                $clone->attr('data-type', $field->getAttribute('data-type') ?: '');
-                $clone->attr('data-source', $this->fileNamePrefix . $name);
-
-                $dataView->after($clone);
-                if ($dataView->hasClass('no-image')) {
-                    $dataView->addClass('no-display');
-                }
-
-                $dataView = $clone;
-            }
         }
 
         return $newField;
@@ -545,6 +560,14 @@ class Form implements RenderInterface, FormInterface
     public function setFormAction(string $newAction) : void
     {
         $this->form['action'] = $newAction;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setFormType(string $type) : void
+    {
+        $this->form['type'] = $type;
     }
 
     /**

@@ -266,6 +266,27 @@ abstract class AbstractField extends AbstractFormComponent
     }
 
     /**
+     * Установить значение атрибута
+     *
+     * @param string $name - имя атрибута
+     * @param $value - значение атрибута
+     */
+    public function setAttribute(string $name, $value) : void
+    {
+        $this->attributes[$name] = $value;
+    }
+
+    /**
+     * Удалить атрибут
+     *
+     * @param string $name - имя атрибута
+     */
+    public function removeAttribute(string $name)  :void
+    {
+        unset($this->attributes[$name]);
+    }
+
+    /**
      * Отрендерить подсказку поля
      *
      * @return null|\phpQueryObject

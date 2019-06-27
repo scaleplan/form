@@ -181,12 +181,16 @@ class Section extends AbstractFormComponent
         $formSection = phpQuery::pq('<section>')->attr('id', $this->id);
         FormHelper::renderAttributes($formSection, $this->attributes);
 
+        /** @var AbstractField $field */
         foreach ($this->fields as $field) {
-            $field->render()->appendTo($formSection);
+            $fieldRender = $field->render();
+            $fieldRender && $fieldRender->appendTo($formSection);
         }
 
+        /** @var Button $button */
         foreach ($this->buttons as $button) {
-            $button->render()->appendTo($formSection);
+            $buttonRender = $button->render();
+            $buttonRender && $buttonRender->appendTo($formSection);
         }
 
         return $formSection;

@@ -14,6 +14,14 @@ class HiddenField extends AbstractField
     public const ALLOWED_TYPES = [self::HIDDEN,];
 
     /**
+     * @return array|string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
      * Отрендерить скрытое поле ввода
      *
      * @return null|\phpQueryObject
@@ -24,15 +32,17 @@ class HiddenField extends AbstractField
     {
         $field = \phpQuery::pq('<input>')->attr('type', self::HIDDEN);
         if (!\is_array($this->value)) {
-            $this->value = [$this->value];
+            $values = [$this->value];
+        } else {
+            $values = $this->value;
         }
 
         $field->attr('name', $this->getName());
 
         FormHelper::renderAttributes($field, $this->attributes);
 
-        $field->val(array_shift($this->value));
-        foreach ($this->value as $value) {
+        $field->val(array_shift($values));
+        foreach ($values as $value) {
             $clone = $field->clone()->val($value);
             $field->after($field);
             $field = $clone;
