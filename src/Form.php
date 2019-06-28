@@ -202,6 +202,16 @@ class Form implements RenderInterface, FormInterface
     }
 
     /**
+     * Удалить раздел по имени
+     *
+     * @param string $sectionName - удаляемая секция
+     */
+    public function deleteSection(string $sectionName) : void
+    {
+        unset($this->sections[$sectionName]);
+    }
+
+    /**
      * Добавить поле к форме
      *
      * @param AbstractField $field - добавляемое поле
@@ -337,7 +347,12 @@ class Form implements RenderInterface, FormInterface
             /** @var \phpQueryObject $dataView */
             $dataView = $dataViews[$field->getName()];
             if ((string)$dataView) {
-                $clone = $dataView->clone();
+                if (\strpos($field->getName(), '[]') !== false) {
+                    $clone = $dataView->clone();
+                } else {
+                    $clone = $dataView;
+                }
+
                 $clone->removeClass('no-image');
                 $clone->removeClass('no-display');
                 $clone->attr('src', $field->getAttribute('data-poster') ?: $field->getValue());
@@ -346,7 +361,7 @@ class Form implements RenderInterface, FormInterface
                 $clone->attr('data-source', $field->getName());
 
                 $dataView->after($clone);
-                $dataView = $clone;
+                $dataViews[$field->getName()] = $clone;
             }
         }
 
@@ -443,11 +458,11 @@ class Form implements RenderInterface, FormInterface
 
             $newField = FieldFabric::getField(
                 [
-                    'type'  => 'hidden',
-                    'name'  => $this->fileNamePrefix . $name,
+                    'type'        => 'hidden',
+                    'name'        => $this->fileNamePrefix . $name,
                     'data-poster' => $file[$this->filePosterKey],
-                    'data-name' => $file[$this->fileNameKey],
-                    'value' => $file[$this->filePathKey],
+                    'data-name'   => $file[$this->fileNameKey],
+                    'value'       => $file[$this->filePathKey],
                 ]
             );
 

@@ -80,7 +80,7 @@ class Section extends AbstractFormComponent
      *
      * @param array $fields - список полей
      */
-    public function setFields(array $fields): void
+    public function setFields(array $fields) : void
     {
         $this->fields = [];
         foreach ($fields as $field) {
@@ -98,7 +98,7 @@ class Section extends AbstractFormComponent
      * @param AbstractField $field - объект поля
      * @param bool $isAppend - добавлять поле в конец и в начала раздела
      */
-    public function addField(AbstractField $field, bool $isAppend = true): void
+    public function addField(AbstractField $field, bool $isAppend = true) : void
     {
         $isAppend ? array_push($this->fields, $field) : array_unshift($this->fields, $field);
     }
@@ -108,7 +108,7 @@ class Section extends AbstractFormComponent
      *
      * @param AbstractField $field - объект поля
      */
-    public function appendField(AbstractField $field): void
+    public function appendField(AbstractField $field) : void
     {
         $this->addField($field);
     }
@@ -118,17 +118,17 @@ class Section extends AbstractFormComponent
      *
      * @param AbstractField $field - объект поля
      */
-    public function prependField(AbstractField $field): void
+    public function prependField(AbstractField $field) : void
     {
         $this->addField($field, false);
     }
 
     /**
-     * Удалить поле раздела по имени
+     * Удалить поле раздела
      *
      * @param AbstractField $field - удаляемое поле
      */
-    public function deleteField(AbstractField $field): void
+    public function deleteField(AbstractField $field) : void
     {
         unset($this->fields[array_search($field, $this->fields, true)]);
     }
@@ -138,7 +138,7 @@ class Section extends AbstractFormComponent
      *
      * @param array $buttons - массив кнопок
      */
-    public function setButtons(array $buttons): void
+    public function setButtons(array $buttons) : void
     {
         foreach ($buttons as $button) {
             if (!($button instanceof Button)) {
@@ -154,7 +154,7 @@ class Section extends AbstractFormComponent
      *
      * @param Button $button - объект кнопки
      */
-    public function addButton(Button $button): void
+    public function addButton(Button $button) : void
     {
         $this->buttons[] = $button;
     }
@@ -164,7 +164,7 @@ class Section extends AbstractFormComponent
      *
      * @param string $title - новый заголовок
      */
-    public function setTitle(string $title): void
+    public function setTitle(string $title) : void
     {
         $this->title = $title;
     }
@@ -201,7 +201,7 @@ class Section extends AbstractFormComponent
      *
      * @return AbstractField[]
      */
-    public function getFields(): array
+    public function getFields() : array
     {
         return $this->fields;
     }
@@ -211,7 +211,7 @@ class Section extends AbstractFormComponent
      *
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle() : string
     {
         return $this->title;
     }
@@ -221,7 +221,7 @@ class Section extends AbstractFormComponent
      *
      * @return string
      */
-    public function getId(): string
+    public function getId() : string
     {
         return $this->id;
     }

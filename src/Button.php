@@ -39,9 +39,9 @@ class Button extends AbstractFormComponent
      *
      * @param $text - текст
      */
-    public function setText($text): void
+    public function setText($text) : void
     {
-        $this->text = (string) $text;
+        $this->text = (string)$text;
     }
 
     /**

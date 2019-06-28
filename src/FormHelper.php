@@ -12,6 +12,7 @@ namespace Scaleplan\Form;
 class FormHelper
 {
     public const STOP_ATTRS = ['labelAfter'];
+
     /**
      * Добавить атрибуты к элементу
      *

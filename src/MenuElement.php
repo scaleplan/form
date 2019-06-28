@@ -20,7 +20,7 @@ class MenuElement extends AbstractFormComponent
      * @var array
      */
     protected static $settings = [
-        'tag' => 'a'
+        'tag' => 'a',
     ];
 
     /**
@@ -67,7 +67,7 @@ class MenuElement extends AbstractFormComponent
      *
      * @throws MenuException
      */
-    public function setHash(string $hash): void
+    public function setHash(string $hash) : void
     {
         if (!preg_match('/^#[\w-]+$/', $hash)) {
             throw new MenuException('Неверный формат хэша');
@@ -81,7 +81,7 @@ class MenuElement extends AbstractFormComponent
      *
      * @param string $text - текст
      */
-    public function setText(string $text): void
+    public function setText(string $text) : void
     {
         $this->text = strip_tags(trim($text));
     }
