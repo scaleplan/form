@@ -89,8 +89,7 @@ class SelectField extends AbstractField
         //$field->val($this->value);
         $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
-        $jsonDecodedValue = \json_decode($this->value, false);
-        if ($jsonDecodedValue !== null) {
+        if (!\is_array($this->value) && null !== ($jsonDecodedValue = \json_decode($this->value, false))) {
             $this->value = $jsonDecodedValue;
         }
 

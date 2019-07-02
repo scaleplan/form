@@ -346,7 +346,7 @@ class Form implements RenderInterface, FormInterface
 
             /** @var \phpQueryObject $dataView */
             $dataView = $dataViews[$field->getName()];
-            if ((string)$dataView) {
+            if ($dataView->length) {
                 if (\strpos($field->getName(), '[]') !== false) {
                     $clone = $dataView->clone();
                 } else {
