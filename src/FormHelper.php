@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form;
 
+use PhpQuery\PhpQueryObject;
+
 /**
  * Класс полезных методов формы
  *
@@ -16,13 +18,17 @@ class FormHelper
     /**
      * Добавить атрибуты к элементу
      *
-     * @param \phpQueryObject $el - элемент
+     * @param PhpQueryObject $el - элемент
      * @param array $attrs - массив атрибутов вида <имя атрибута> => <значение атрибута>
      * @param array $stopAttrs - массив имен атрибутов, которые добавлять не надо
      *
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      */
-    public static function renderAttributes(\phpQueryObject $el, array $attrs, array $stopAttrs = self::STOP_ATTRS) : ?\phpQueryObject
+    public static function renderAttributes(
+        PhpQueryObject $el,
+        array $attrs,
+        array $stopAttrs = self::STOP_ATTRS
+    ) : ?PhpQueryObject
     {
         unset($attrs['html'], $attrs['text'], $attrs['value'], $attrs['hint']);
         foreach ($attrs as $attr => $value) {

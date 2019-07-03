@@ -2,7 +2,8 @@
 
 namespace Scaleplan\Form;
 
-use phpQuery;
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\MenuException;
 
 /**
@@ -89,13 +90,13 @@ class MenuElement extends AbstractFormComponent
     /**
      * Отрендерить элемент меню
      *
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $menuEl = phpQuery::pq("<{$this->tag}>");
+        $menuEl = PhpQuery::pq("<{$this->tag}>");
         $menuEl->text($this->text);
         $menuEl->attr('href', $this->hash);
 

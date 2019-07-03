@@ -2,7 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
-use phpQuery;
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\FormHelper;
 
@@ -34,13 +35,13 @@ class FieldWrapper extends AbstractFormComponent
     /**
      * Отрендерить обертку поля
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $fieldWrapper = phpQuery::pq("<{$this->tag}>");
+        $fieldWrapper = PhpQuery::pq("<{$this->tag}>");
         FormHelper::renderAttributes($fieldWrapper, $this->attributes);
 
         return $fieldWrapper;

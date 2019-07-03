@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\FormHelper;
 
 /**
@@ -14,13 +16,13 @@ class TextareaField extends AbstractField
     /**
      * Отрендерить многострочное поле ввода
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $field = \phpQuery::pq('<textarea>');
+        $field = PhpQuery::pq('<textarea>');
         $field->val($this->value);
         $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);

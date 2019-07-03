@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
 
@@ -15,13 +17,13 @@ class InputField extends AbstractField
     /**
      * Отрендерить однострочное поле ввода
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $field = \phpQuery::pq('<input>')->attr('type', $this->getType());
+        $field = PhpQuery::pq('<input>')->attr('type', $this->getType());
         $field->val($this->value);
         $field->attr('name', $this->getName());
 

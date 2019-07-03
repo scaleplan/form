@@ -2,7 +2,8 @@
 
 namespace Scaleplan\Form;
 
-use phpQuery;
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Fields\AbstractField;
 use Scaleplan\Form\Fields\FieldFabric;
 
@@ -172,13 +173,13 @@ class Section extends AbstractFormComponent
     /**
      * Отрендерить раздел формы
      *
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $formSection = phpQuery::pq('<section>')->attr('id', $this->id);
+        $formSection = PhpQuery::pq('<section>')->attr('id', $this->id);
         FormHelper::renderAttributes($formSection, $this->attributes);
 
         /** @var AbstractField $field */

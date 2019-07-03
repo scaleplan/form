@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\FormHelper;
 
 /**
@@ -79,13 +81,13 @@ class SelectField extends AbstractField
     /**
      * Отрендерить поле выпадающего списка
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $field = \phpQuery::pq('<select>');
+        $field = PhpQuery::pq('<select>');
         //$field->val($this->value);
         $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);

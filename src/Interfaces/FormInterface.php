@@ -2,6 +2,7 @@
 
 namespace Scaleplan\Form\Interfaces;
 
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions;
 use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\Form\Fields\AbstractField;
@@ -84,11 +85,11 @@ interface FormInterface
     /**
      * Превратить форму в HTML-разметку
      *
-     * @return \phpQueryObject
+     * @return PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : \phpQueryObject;
+    public function render() : PhpQueryObject;
 
     /**
      * Заполняить поля форма значениями

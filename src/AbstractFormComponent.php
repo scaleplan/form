@@ -2,6 +2,7 @@
 
 namespace Scaleplan\Form;
 
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Interfaces\RenderInterface;
 use Scaleplan\InitTrait\InitTrait;
 
@@ -90,9 +91,9 @@ abstract class AbstractFormComponent implements RenderInterface
     /**
      * Превратить объект в HTML-разметку
      *
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      */
-    abstract public function render() : ?\phpQueryObject;
+    abstract public function render() : ?PhpQueryObject;
 
     /**
      * Вернуть объект как строку

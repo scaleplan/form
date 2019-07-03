@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\FieldException;
 
@@ -256,17 +258,17 @@ abstract class AbstractField extends AbstractFormComponent
     /**
      * Отрендерить подсказку поля
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    protected function renderFieldHint() : ?\phpQueryObject
+    protected function renderFieldHint() : ?PhpQueryObject
     {
         if (empty($this->hint)) {
             return null;
         }
 
-        $hint = \phpQuery::pq($this->hintHTML);
+        $hint = PhpQuery::pq($this->hintHTML);
 
         return $hint->attr($this->hintAttribute, $this->hint);
     }
@@ -274,17 +276,17 @@ abstract class AbstractField extends AbstractFormComponent
     /**
      * Рендеринг метки поля
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    protected function renderLabel() : ?\phpQueryObject
+    protected function renderLabel() : ?PhpQueryObject
     {
         if (empty($this->labelText)) {
             return null;
         }
 
-        $label = \phpQuery::pq('<label>');
+        $label = PhpQuery::pq('<label>');
         $label->text($this->labelText);
         $label->attr('for', $this->attributes['id']);
 
@@ -292,13 +294,13 @@ abstract class AbstractField extends AbstractFormComponent
     }
 
     /**
-     * @param \phpQueryObject|\phpQueryObject[] $field
+     * @param PhpQueryObject|PhpQueryObject[] $field
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    protected function renderEnding($field) : ?\phpQueryObject
+    protected function renderEnding($field) : ?PhpQueryObject
     {
         $label = $this->renderLabel();
         $hint = $this->renderFieldHint();
@@ -309,7 +311,7 @@ abstract class AbstractField extends AbstractFormComponent
             $elements = [$label, $field, $hint];
         }
 
-        $append = static function ($el, \phpQueryObject $parent) {
+        $append = static function ($el, PhpQueryObject $parent) {
             if (!\is_array($el)) {
                 $parent->append($el);
             }
@@ -322,7 +324,7 @@ abstract class AbstractField extends AbstractFormComponent
         };
 
         if (!$this->fieldWrapper) {
-            $parent = \phpQuery::pq('<div>');
+            $parent = PhpQuery::pq('<div>');
             foreach ($elements as $el) {
                 $append($el, $parent);
             }
@@ -342,7 +344,7 @@ abstract class AbstractField extends AbstractFormComponent
     }
 
     /**
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      */
-    abstract public function render() : ?\phpQueryObject;
+    abstract public function render() : ?PhpQueryObject;
 }

@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Interfaces;
 
+use PhpQuery\PhpQueryObject;
+
 /**
  * Interface Render
  *
@@ -10,7 +12,7 @@ namespace Scaleplan\Form\Interfaces;
 interface RenderInterface
 {
     /**
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      */
-    public function render() : ?\phpQueryObject;
+    public function render() : ?PhpQueryObject;
 }

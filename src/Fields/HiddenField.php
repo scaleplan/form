@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\FormHelper;
 
 /**
@@ -24,13 +26,13 @@ class HiddenField extends AbstractField
     /**
      * Отрендерить скрытое поле ввода
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $field = \phpQuery::pq('<input>')->attr('type', self::HIDDEN);
+        $field = PhpQuery::pq('<input>')->attr('type', self::HIDDEN);
         if (!\is_array($this->value)) {
             $values = [$this->value];
         } else {

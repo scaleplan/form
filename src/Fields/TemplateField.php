@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\FormHelper;
 
 /**
@@ -31,9 +33,9 @@ class TemplateField extends AbstractField
     protected $template = '';
 
     /**
-     * phpQuery-объект шаблона поля
+     * PhpQuery-объект шаблона поля
      *
-     * @var null|\phpQueryObject
+     * @var null|PhpQueryObject
      */
     protected $renderedTemplate;
 
@@ -68,17 +70,17 @@ class TemplateField extends AbstractField
     /**
      * Отрендерить поле представленное шаблоном
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
         if (empty($this->templatePath) || empty($this->template)) {
             return null;
         }
 
-        $renderedTemplate = \phpQuery::newDocumentFileHTML(
+        $renderedTemplate = PhpQuery::newDocumentFileHTML(
             $_SERVER['DOCUMENT_ROOT'] . $this->templatePath . '/' . $this->template
         );
         $renderedTemplate->find('*[data-view]')->attr('data-view', $this->name);

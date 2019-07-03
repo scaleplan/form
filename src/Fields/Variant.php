@@ -2,7 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
-use phpQuery;
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\RadioVariantException;
 use Scaleplan\Form\FormHelper;
@@ -100,22 +101,22 @@ class Variant extends AbstractFormComponent
     /**
      * Отрендерить вариант переключателя
      *
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $field = phpQuery::pq('<input>');
+        $field = PhpQuery::pq('<input>');
         $field->attr('type', $this->type);
         $field->attr('name', $this->name);
         $field->val($this->value);
 
-        $span = phpQuery::pq('<span>');
+        $span = PhpQuery::pq('<span>');
         $span->text($this->text);
         FormHelper::renderAttributes($field, $this->attributes);
 
-        $label = phpQuery::pq('<label>');
+        $label = PhpQuery::pq('<label>');
         $label->append($field);
         $label->append($span);
 

@@ -2,8 +2,7 @@
 
 namespace Scaleplan\Form\Fields;
 
-use phpQuery;
-use Scaleplan\Form\Exceptions\FieldException;
+use PhpQuery\PhpQueryObject;
 
 /**
  * Class SwitchField
@@ -71,11 +70,11 @@ class SwitchField extends AbstractField
     /**
      * Отрендерить переключатель
      *
-     * @return null|\phpQueryObject
+     * @return null|PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
         $value = $this->value;
         if (\is_array($this->value)) {

@@ -2,11 +2,11 @@
 
 namespace Scaleplan\Form;
 
-use phpQuery;
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\Form\Fields\AbstractField;
 use Scaleplan\Form\Fields\HiddenField;
-use Scaleplan\Form\Fields\OptGroup;
 use Scaleplan\Form\Fields\Option;
 use Scaleplan\Form\Fields\SelectField;
 use Scaleplan\Form\Fields\TemplateField;
@@ -292,25 +292,26 @@ class Form implements RenderInterface, FormInterface
     /**
      * Превратить форму в HTML-разметку
      *
-     * @return \phpQueryObject
+     * @return PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : \phpQueryObject
+    public function render() : PhpQueryObject
     {
-        $formDocument = phpQuery::newDocument();
-        $formParent = phpQuery::pq('<div>')->attr('id', 'formParent')->appendTo($formDocument);
+        $formDocument = PhpQuery::newDocument();
+        $formParent = PhpQuery::pq('<div>')->attr('id', 'formParent');
+        $formParent && $formParent->appendTo($formDocument);
 
-        /** @var \phpQueryObject $title */
-        $title = phpQuery::pq('<div>')->html($this->title['text'] ?? '');
+        /** @var PhpQueryObject $title */
+        $title = PhpQuery::pq('<div>')->html($this->title['text'] ?? '');
         $title->appendTo($formParent);
         FormHelper::renderAttributes($title, $this->title);
 
-        $form = phpQuery::pq('<form>')->appendTo($formParent);
+        $form = PhpQuery::pq('<form>')->appendTo($formParent);
         FormHelper::renderAttributes($form, $this->form);
 
         if ($this->sections) {
-            $menu = phpQuery::pq('<menu>');
+            $menu = PhpQuery::pq('<menu>');
             FormHelper::renderAttributes($menu, $this->menu);
             $title->after($menu);
 
@@ -344,7 +345,7 @@ class Form implements RenderInterface, FormInterface
                 $dataViews[$field->getName()] = $form->find("*[data-view='$name']");
             }
 
-            /** @var \phpQueryObject $dataView */
+            /** @var PhpQueryObject $dataView */
             $dataView = $dataViews[$field->getName()];
             if ($dataView->length) {
                 if (\strpos($field->getName(), '[]') !== false) {

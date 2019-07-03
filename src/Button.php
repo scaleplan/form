@@ -2,7 +2,8 @@
 
 namespace Scaleplan\Form;
 
-use phpQuery;
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 
 /**
  * Класс кнопки
@@ -47,13 +48,13 @@ class Button extends AbstractFormComponent
     /**
      * Отрендерить кнопку
      *
-     * @return \phpQueryObject|null
+     * @return PhpQueryObject|null
      *
      * @throws \Exception
      */
-    public function render() : ?\phpQueryObject
+    public function render() : ?PhpQueryObject
     {
-        $button = phpQuery::pq('<button>');
+        $button = PhpQuery::pq('<button>');
         $button->text($this->text);
         FormHelper::renderAttributes($button, $this->attributes);
 

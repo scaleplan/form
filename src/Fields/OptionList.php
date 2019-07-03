@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQueryObject;
+
 /**
  * Class OptionList
  *
@@ -111,13 +113,13 @@ class OptionList
     }
 
     /**
-     * @param \phpQueryObject $element
+     * @param PhpQueryObject $element
      *
-     * @return \phpQueryObject
+     * @return PhpQueryObject
      *
      * @throws \Exception
      */
-    public function addToElement(\phpQueryObject $element) : \phpQueryObject
+    public function addToElement(PhpQueryObject $element) : PhpQueryObject
     {
         /** @var Option $option */
         foreach ($this->options as $option) {

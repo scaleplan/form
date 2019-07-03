@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Fields;
 
+use PhpQuery\PhpQuery;
+use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
@@ -110,13 +112,13 @@ class OptGroup extends AbstractFormComponent
     }
 
     /**
-     * @return \phpQueryObject
+     * @return PhpQueryObject
      *
      * @throws \Exception
      */
-    public function render() : \phpQueryObject
+    public function render() : PhpQueryObject
     {
-        $optGroup = \phpQuery::pq('<optgroup>');
+        $optGroup = PhpQuery::pq('<optgroup>');
         $optGroup->attr('label', $this->getLabel());
         $optGroup->attr('class', $this->getClass());
         FormHelper::renderAttributes($optGroup, $this->attributes);
