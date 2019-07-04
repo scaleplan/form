@@ -340,14 +340,14 @@ class Form implements RenderInterface, FormInterface
         $dataViews = [];
         /** @var HiddenField $field */
         foreach ($this->additionalFields as $field) {
-            if (!$dataViews[$field->getName()]) {
+            if (empty($dataViews[$field->getName()])) {
                 $name = \str_replace($this->fileNamePrefix, '', $field->getName());
                 $dataViews[$field->getName()] = $form->find("*[data-view='$name']");
             }
 
             /** @var PhpQueryObject $dataView */
             $dataView = $dataViews[$field->getName()];
-            if ($dataView->length) {
+            if ($dataView->count()) {
                 if (\strpos($field->getName(), '[]') !== false) {
                     $clone = $dataView->clone();
                 } else {

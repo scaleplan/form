@@ -312,6 +312,10 @@ abstract class AbstractField extends AbstractFormComponent
         }
 
         $append = static function ($el, PhpQueryObject $parent) {
+            if (null === $el) {
+                return $parent;
+            }
+
             if (!\is_array($el)) {
                 $parent->append($el);
             }
