@@ -6,14 +6,14 @@ use PhpQuery\PhpQuery;
 use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\FormException;
 use Scaleplan\Form\Fields\AbstractField;
+use Scaleplan\Form\Fields\FieldFabric;
 use Scaleplan\Form\Fields\HiddenField;
 use Scaleplan\Form\Fields\Option;
 use Scaleplan\Form\Fields\SelectField;
-use Scaleplan\Form\Fields\TemplateField;
 use Scaleplan\Form\Interfaces\FormInterface;
 use Scaleplan\Form\Interfaces\RenderInterface;
 use Scaleplan\InitTrait\InitTrait;
-use Scaleplan\Form\Fields\FieldFabric;
+use Scaleplan\Templater\Templater;
 
 /**
  * Класс формы
@@ -356,10 +356,17 @@ class Form implements RenderInterface, FormInterface
 
                 $clone->removeClass('no-image');
                 $clone->removeClass('no-display');
-                $clone->attr('src', $field->getAttribute('data-poster') ?: $field->getValue());
-                $clone->attr('data-object-src', $field->getValue());
-                $clone->attr('title', $field->getAttribute('data-name'));
-                $clone->attr('data-source', $field->getName());
+
+                $data = [
+                    'src'        => $field->getAttribute('data-poster') ?: $field->getValue(),
+                    'object-src' => $field->getValue(),
+                    'title'      => $field->getAttribute('data-name'),
+                    'name'       => $field->getName(),
+                    'type'       => $field->getAttribute('data-type'),
+                    'value'      => $field->getValue(),
+                ];
+
+                (new Templater)->setData($data, $clone);
 
                 $dataView->after($clone);
                 $dataViews[$field->getName()] = $clone;
@@ -438,13 +445,6 @@ class Form implements RenderInterface, FormInterface
         }
 
         $newField = $field;
-        $dataView = null;
-        if ($field instanceof TemplateField) {
-            $render = $field->render();
-            if ($render) {
-                $dataView = $render->find("*[data-view='{$field->getName()}']");
-            }
-        }
         foreach ($value as $file) {
             if (empty($file[$this->filePathKey])) {
                 if (!\is_string($file)) {
@@ -457,6 +457,8 @@ class Form implements RenderInterface, FormInterface
             $file[$this->filePosterKey] = $file[$this->filePosterKey] ?? '';
             $file[$this->fileNameKey] = $file[$this->fileNameKey] ?? '';
 
+            $nameArray = explode('.', $file[$this->filePathKey]);
+            $ext = strtolower(end($nameArray));
             $newField = FieldFabric::getField(
                 [
                     'type'        => 'hidden',
@@ -464,6 +466,7 @@ class Form implements RenderInterface, FormInterface
                     'data-poster' => $file[$this->filePosterKey],
                     'data-name'   => $file[$this->fileNameKey],
                     'value'       => $file[$this->filePathKey],
+                    'data-type'   => $ext,
                 ]
             );
 
