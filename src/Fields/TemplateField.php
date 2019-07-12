@@ -4,7 +4,10 @@ namespace Scaleplan\Form\Fields;
 
 use PhpQuery\PhpQuery;
 use PhpQuery\PhpQueryObject;
+use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
+use function Scaleplan\Helpers\get_required_env;
+use Scaleplan\Main\Constants\ConfigConstants;
 
 /**
  * Class TemplateField
@@ -23,7 +26,7 @@ class TemplateField extends AbstractField
      *
      * @var string
      */
-    protected $templatePath = '/bundles/app/Views/private/forms/templates';
+    protected $templatePath = '/templates';
 
     /**
      * Имя файла шаблона поля
@@ -38,6 +41,22 @@ class TemplateField extends AbstractField
      * @var null|PhpQueryObject
      */
     protected $renderedTemplate;
+
+    /**
+     * TemplateField constructor.
+     *
+     * @param array $settings
+     *
+     * @throws FieldException
+     */
+    public function __construct(array $settings)
+    {
+        if (empty($settings['template'])) {
+            throw new FieldException('Не задан файл шаблона поля.');
+        }
+
+        $this->attributes = $this->initObject($settings);
+    }
 
     /**
      * Установить шаблон поля
@@ -81,13 +100,19 @@ class TemplateField extends AbstractField
         }
 
         $renderedTemplate = PhpQuery::newDocumentFileHTML(
-            $_SERVER['DOCUMENT_ROOT'] . $this->templatePath . '/' . $this->template
+            get_required_env(ConfigConstants::BUNDLE_PATH)
+            . get_required_env(ConfigConstants::VIEWS_PATH)
+            . get_required_env('FORM_PATH')
+            . $this->templatePath
+            . '/' . $this->template
         );
-        $renderedTemplate->find('*[data-view]')->attr('data-view', $this->name);
+        $dataView = $renderedTemplate->find('*[data-view]');
+        $dataView && $dataView->attr('data-view', $this->name);
         $field = $renderedTemplate->find('select, input, textarea')->filter(':first');
-        $field->val($this->value);
-        $field->attr('name', $this->name);
-        $renderedTemplate->find('label')->text($this->labelText);
+        $this->value && $field->val($this->value);
+        $this->name && $field->attr('name', $this->name);
+        $this->labelText && $renderedTemplate->find('label')->text($this->labelText);
+
         FormHelper::renderAttributes($field, $this->attributes);
 
         return $renderedTemplate;
