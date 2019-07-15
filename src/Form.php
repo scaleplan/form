@@ -439,7 +439,7 @@ class Form implements RenderInterface, FormInterface
         $name = $field->getName();
 
         if (!\is_array($value)) {
-            $field->setValue($value);
+            //$field->setValue($value);
 
             $value = [$value];
         }
