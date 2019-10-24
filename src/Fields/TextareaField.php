@@ -26,6 +26,7 @@ class TextareaField extends AbstractField
         $field->val($this->value);
         $field->attr('name', $this->getName());
         FormHelper::renderAttributes($field, $this->attributes);
+        $this->getAttribute('required') && $field->parent()->attr('required', 'required');
 
         return $this->renderEnding($field);
     }
