@@ -110,6 +110,7 @@ class Variant extends AbstractFormComponent
         $field = PhpQuery::pq('<input>');
         $field->attr('type', $this->type);
         $field->attr('name', $this->name);
+        $field->attr('checked', $this->checked);
         $field->val($this->value);
 
         $span = PhpQuery::pq('<span>');

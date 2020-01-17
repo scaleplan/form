@@ -43,7 +43,7 @@ class InputField extends AbstractField
     {
         if (\in_array(
             $type,
-            [self::RADIO, self::CHECKBOX, self::TEXTAREA, self::SELECT, self::HIDDEN, self::TEMPLATE],
+            [self::TEXTAREA, self::SELECT, self::HIDDEN, self::TEMPLATE],
             true)
         ) {
             throw new FieldException("Тип $type не поддерживается для однострочных текстовых полей.");

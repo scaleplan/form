@@ -76,19 +76,15 @@ class SwitchField extends AbstractField
      */
     public function render() : ?PhpQueryObject
     {
-        $value = $this->value;
         if (\is_array($this->value)) {
             $this->setType(self::CHECKBOX);
-        } else {
-            $this->setType(self::RADIO);
-            $value = [$value];
         }
 
         foreach ($this->variants as $index => $variant) {
             $variant->setType($this->type);
             $variant->setName($this->name);
 
-            if (\in_array($variant->getValue(), $value, true)) {
+            if (\in_array($variant->getValue(), (array)$this->value, true)) {
                 $variant->setChecked(true);
             }
         }
