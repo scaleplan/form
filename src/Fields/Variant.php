@@ -110,7 +110,7 @@ class Variant extends AbstractFormComponent
         $field = PhpQuery::pq('<input>');
         $field->attr('type', $this->type);
         $field->attr('name', $this->name);
-        $field->attr('checked', $this->checked);
+        $this->checked && $field->attr('checked', $this->checked);
         $field->val($this->value);
 
         $span = PhpQuery::pq('<span>');
@@ -127,9 +127,9 @@ class Variant extends AbstractFormComponent
     /**
      * Вернуть значение переключателя
      *
-     * @return string
+     * @return mixed
      */
-    public function getValue() : string
+    public function getValue()
     {
         return $this->value;
     }
