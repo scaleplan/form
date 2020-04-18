@@ -405,13 +405,17 @@ class Form implements RenderInterface, FormInterface
     /**
      * @param string $name
      * @param $value
+     * @param bool $disabled
      */
-    public function setFieldValue(string $name, $value) : void
+    public function setFieldValue(string $name, $value, $disabled = false) : void
     {
         foreach ($this->sections as &$section) {
             foreach ($section->getFields() as &$field) {
                 if ($field->getName() === $name) {
                     $field->setValue($value);
+                    if ($disabled) {
+                        $field->addAttribute('disabled', 'disabled');
+                    }
                     return;
                 }
             }
