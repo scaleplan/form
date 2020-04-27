@@ -83,6 +83,7 @@ class SwitchField extends AbstractField
         foreach ($this->variants as $index => $variant) {
             $variant->setType($this->type);
             $variant->setName($this->name);
+            $variant->setAttribute('id', $this->getAttribute('id') ?? $this->name);
 
             if (\in_array($variant->getValue(), (array)$this->value, true)) {
                 $variant->setChecked(true);
