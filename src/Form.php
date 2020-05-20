@@ -373,6 +373,10 @@ class Form implements RenderInterface, FormInterface
             }
         }
 
+        if (!empty($this->formConf['privacy'])) {
+            $form->append(PhpQuery::pq('<div class="privacy">')->html($this->formConf['privacy']));
+        }
+
         return $formDocument;
     }
 
