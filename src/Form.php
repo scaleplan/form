@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Scaleplan\Form;
 
@@ -113,6 +114,16 @@ class Form implements RenderInterface, FormInterface
     protected $fileNamePrefix = 'old_';
 
     /**
+     * @var string
+     */
+    protected $onlyForAttribute = 'only-for';
+
+    /**
+     * @var string
+     */
+    protected $privacyKey = 'privacy';
+
+    /**
      * Разделы полей формы
      *
      * @var Section[]
@@ -134,34 +145,80 @@ class Form implements RenderInterface, FormInterface
     protected $additionalFields = [];
 
     /**
+     * @var string|null
+     */
+    protected $privacy;
+
+    /**
      * Form constructor.
      *
      * @param array $formConf - параметры конфигурации
+     * @param string $type - тип формы
      *
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
      * @throws FormException
      */
-    public function __construct(array $formConf)
+    public function __construct(array $formConf, string $type = 'put')
     {
         $this->formConf = &$formConf;
-
+        $this->initObject($formConf);
         if (empty($formConf['sections']) || !\is_array($formConf['sections'])) {
             throw new FormException('Не заданы разделы формы');
         }
 
-        foreach ($formConf['sections'] as &$section) {
-            $section['buttons'] = array_merge($formConf['buttons'] ?? [], $section['buttons'] ?? []);
-            $section = new Section($section);
+        $this->setFormType($type);
+        if (!empty($this->form['action'][$type])) {
+            $this->setFormAction($this->form['action'][$type]);
         }
 
+        if (!empty($this->title['text'][$type])) {
+            $this->setTitleText($this->title['text'][$type]);
+        }
+
+        $this->privacy = null;
+        if (!empty($formConf[$this->privacyKey]['text'])
+            && (empty($formConf[$this->privacyKey][$this->onlyForAttribute])
+                || $formConf[$this->privacyKey][$this->onlyForAttribute] === $type)
+        ) {
+            $this->privacy = $formConf[$this->privacyKey]['text'];
+        }
+
+        $newSections = $formConf['sections'];
+        foreach ($formConf['sections'] as $sectionIndex => &$section) {
+            if (!empty($section[$this->onlyForAttribute])) {
+                if ($section[$this->onlyForAttribute] !== $type) {
+                    unset($newSections[$sectionIndex]);
+                    continue;
+                }
+
+                unset($newSections[$sectionIndex][$this->onlyForAttribute]);
+            }
+
+            foreach ($section['fields'] as $fieldIndex => &$field) {
+                if (!empty($field[$this->onlyForAttribute])) {
+                    if ($field[$this->onlyForAttribute] !== $type) {
+                        unset($newSections[$sectionIndex]['fields'][$fieldIndex]);
+                        continue;
+                    }
+
+                    unset($newSections[$sectionIndex]['fields'][$fieldIndex][$this->onlyForAttribute]);
+                }
+            }
+            unset($field);
+        }
+        unset($section);
+
+        $this->sections = [];
+        foreach ($newSections as &$section) {
+            $section['buttons'] = array_merge($formConf['buttons'] ?? [], $section['buttons'] ?? []);
+            $this->addSection(new Section($section));
+        }
         unset($section);
 
         if (isset($formConf['labelAfter'])) {
             AbstractField::setSetting('labelAfter', $formConf['labelAfter']);
         }
-
-        $this->initObject($formConf);
     }
 
     /**
@@ -373,8 +430,8 @@ class Form implements RenderInterface, FormInterface
             }
         }
 
-        if (!empty($this->formConf['privacy'])) {
-            $form->append(PhpQuery::pq('<div class="privacy">')->html($this->formConf['privacy']));
+        if ($this->privacy) {
+            $form->append(PhpQuery::pq('<div class="privacy">')->html($this->privacy));
         }
 
         return $formDocument;

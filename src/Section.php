@@ -54,7 +54,7 @@ class Section extends AbstractFormComponent
     public function __construct(array $settings)
     {
         /*if (empty($settings['title'])) {
-            throw new SectionException('Не задан текст кнопки');
+            throw new SectionException('Не задан заголовок раздела.');
         }*/
 
         if (!empty($settings['fields']) && \is_array($settings['fields'])) {
