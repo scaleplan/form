@@ -164,7 +164,7 @@ class Form implements RenderInterface, FormInterface
         $this->formConf = &$formConf;
         $this->initObject($formConf);
         if (empty($formConf['sections']) || !\is_array($formConf['sections'])) {
-            throw new FormException('Не заданы разделы формы');
+            throw new FormException('Не заданы разделы формы.');
         }
 
         $this->setFormType($type);
@@ -287,7 +287,7 @@ class Form implements RenderInterface, FormInterface
             }
 
             if (empty(array_keys($this->sections)[$sectionNumber])) {
-                throw new FormException('Задан неверный индекст раздела формы');
+                throw new FormException('Задан неверный индекс раздела формы.');
             }
 
             $section = $this->sections[array_keys($this->sections)[$sectionNumber]];

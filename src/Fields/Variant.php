@@ -60,7 +60,7 @@ class Variant extends AbstractFormComponent
     public function __construct(array $settings)
     {
         if (empty($settings['text'])) {
-            throw new RadioVariantException('Не задан текст метки');
+            throw new RadioVariantException('Не задан текст метки.');
         }
 
         parent::__construct($settings);
@@ -84,7 +84,7 @@ class Variant extends AbstractFormComponent
     public function setType(string $type) : void
     {
         if (!\in_array($type, [SwitchField::RADIO, SwitchField::CHECKBOX], true)) {
-            throw new RadioVariantException('Значением типа может только checkbox и radio');
+            throw new RadioVariantException('Значением типа может только checkbox и radio.');
         }
 
         $this->type = $type;

@@ -55,7 +55,7 @@ class MenuElement extends AbstractFormComponent
     public function __construct(array $settings)
     {
         if (empty($settings['text'])) {
-            throw new MenuException('Не задан текст элемента меню');
+            throw new MenuException('Не задано название элемента меню.');
         }
 
         parent::__construct($settings);
@@ -71,7 +71,7 @@ class MenuElement extends AbstractFormComponent
     public function setHash(string $hash) : void
     {
         if (!preg_match('/^#[\w-]+$/', $hash)) {
-            throw new MenuException('Неверный формат хэша');
+            throw new MenuException('Неверный формат хэша.');
         }
 
         $this->hash = $hash;

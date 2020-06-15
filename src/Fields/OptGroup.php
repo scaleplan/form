@@ -90,7 +90,7 @@ class OptGroup extends AbstractFormComponent
     public function __construct(array $settings)
     {
         if (empty($settings['label'])) {
-            throw new FieldException('Не заполнена метка группы элементов выпадающего списка');
+            throw new FieldException('Не заполнена метка группы элементов выпадающего списка.');
         }
 
         $this->setLabel($settings['label']);

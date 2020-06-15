@@ -9,7 +9,7 @@ namespace Scaleplan\Form\Exceptions;
  */
 class FormException extends \Exception
 {
-    public const MESSAGE = 'Form constructor error.';
+    public const MESSAGE = 'Ошибка конструктора формы.';
     public const CODE = 500;
 
     /**

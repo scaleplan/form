@@ -9,5 +9,5 @@ namespace Scaleplan\Form\Exceptions;
  */
 class MenuException extends ConfigException
 {
-    public const MESSAGE = 'Menu element build error.';
+    public const MESSAGE = 'Ошибка создания пункта меню.';
 }

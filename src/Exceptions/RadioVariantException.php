@@ -9,5 +9,5 @@ namespace Scaleplan\Form\Exceptions;
  */
 class RadioVariantException extends ConfigException
 {
-    public const MESSAGE = 'Radio button build error.';
+    public const MESSAGE = 'Ошибка создания radio-кнопки.';
 }

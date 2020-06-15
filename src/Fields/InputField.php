@@ -46,7 +46,7 @@ class InputField extends AbstractField
             [self::TEXTAREA, self::SELECT, self::HIDDEN, self::TEMPLATE],
             true)
         ) {
-            throw new FieldException("Тип $type не поддерживается для однострочных текстовых полей.");
+            throw new FieldException("Тип $type не поддерживается поля input.");
         }
 
         $this->type = $type;

@@ -9,6 +9,6 @@ namespace Scaleplan\Form\Exceptions;
  */
 class ConfigException extends FormException
 {
-    public const MESSAGE = 'Config error.';
+    public const MESSAGE = 'Ошибка конфигурации.';
     public const CODE = 406;
 }

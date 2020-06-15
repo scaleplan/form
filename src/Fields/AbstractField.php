@@ -160,13 +160,13 @@ abstract class AbstractField extends AbstractFormComponent
     public function __construct(array $settings)
     {
         if (empty($settings['type'])) {
-            throw new FieldException('Не задан тип поля');
+            throw new FieldException('Не задан тип поля.');
         }
 
         $this->setType($settings['type']);
 
         if (empty($settings['name'])) {
-            throw new FieldException('Не задано имя поля');
+            throw new FieldException('Не задано имя поля.');
         }
 
         if (!empty($settings['fieldWrapper'])) {
@@ -200,7 +200,7 @@ abstract class AbstractField extends AbstractFormComponent
     public function setType(string $type) : void
     {
         if (!\in_array($type, static::ALLOWED_TYPES, true)) {
-            throw new FieldException("Тип поля $type не поддерживается");
+            throw new FieldException("Тип поля $type не поддерживается.");
         }
 
         $this->type = $type;
