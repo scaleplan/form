@@ -15,6 +15,7 @@ use Scaleplan\Form\Interfaces\FormInterface;
 use Scaleplan\Form\Interfaces\RenderInterface;
 use Scaleplan\InitTrait\InitTrait;
 use Scaleplan\Templater\Templater;
+use function Scaleplan\Translator\translate;
 
 /**
  * Класс формы
@@ -158,13 +159,18 @@ class Form implements RenderInterface, FormInterface
      * @throws Exceptions\FieldException
      * @throws Exceptions\RadioVariantException
      * @throws FormException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(array $formConf, string $type = 'put')
     {
         $this->formConf = &$formConf;
         $this->initObject($formConf);
         if (empty($formConf['sections']) || !\is_array($formConf['sections'])) {
-            throw new FormException('Не заданы разделы формы.');
+            throw new FormException(translate('form.sections-not-set'));
         }
 
         $this->setFormType($type);
@@ -278,6 +284,11 @@ class Form implements RenderInterface, FormInterface
      * @return Form
      *
      * @throws FormException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function addField(AbstractField $field, int $sectionNumber = -1, bool $isAppend = true) : Form
     {
@@ -287,7 +298,7 @@ class Form implements RenderInterface, FormInterface
             }
 
             if (empty(array_keys($this->sections)[$sectionNumber])) {
-                throw new FormException('Задан неверный индекс раздела формы.');
+                throw new FormException(translate('form.wrong-section-index'));
             }
 
             $section = $this->sections[array_keys($this->sections)[$sectionNumber]];

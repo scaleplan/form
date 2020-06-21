@@ -2,6 +2,8 @@
 
 namespace Scaleplan\Form\Exceptions;
 
+use function Scaleplan\Translator\translate;
+
 /**
  * Class FormException
  *
@@ -9,8 +11,8 @@ namespace Scaleplan\Form\Exceptions;
  */
 class FormException extends \Exception
 {
-    public const MESSAGE = 'Ошибка конструктора формы.';
-    public const CODE = 500;
+    public const MESSAGE = 'form.form-constructor-error';
+    public const CODE    = 500;
 
     /**
      * FormException constructor.
@@ -18,9 +20,19 @@ class FormException extends \Exception
      * @param string $message
      * @param int $code
      * @param \Throwable|null $previous
+     *
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(string $message = '', int $code = 0, \Throwable $previous = null)
     {
-        parent::__construct($message ?: static::MESSAGE, $code ?: static::CODE, $previous);
+        parent::__construct(
+            $message ?: translate(static::MESSAGE) ?: static::MESSAGE,
+            $code ?: static::CODE,
+            $previous
+        );
     }
 }

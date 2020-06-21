@@ -1,0 +1,18 @@
+sections-not-set: Form sections not set.
+wrong-section-index: Wrong form section index.
+menu-item-name-not-set: Menu item name not set.
+wrong-hash-format: Wrong hash format.
+field-type-not-set: Field type not set.
+field-name-not-set: Field name not set.
+field-type-not-supported: Field type :type not supported.
+input-not-supported-type: Input form field not supported type ':type'.
+select-group-label-not-set: Group label of select form field not set.
+template-file-not-set: Field template file not set.
+label-text-not-set: Label text not set.
+only-checkbox-radio: This field supported checkbox and radio types only.
+record-index-not-found: Record not contains requested index.
+config-error: Config error.
+field-create-error: Field creating error.
+form-constructor-error: Form constructor error.
+menu-item-create-error: Menu item creating error.
+radio-create-error: Radio-button creating error.

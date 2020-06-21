@@ -7,6 +7,7 @@ use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\RadioVariantException;
 use Scaleplan\Form\FormHelper;
+use function Scaleplan\Translator\translate;
 
 /**
  * Класс вариантов радио-кнопки
@@ -51,16 +52,21 @@ class Variant extends AbstractFormComponent
     protected $checked = false;
 
     /**
-     * Конструктор
+     * Variant constructor.
      *
      * @param array $settings - настройки объекта
      *
      * @throws RadioVariantException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['text'])) {
-            throw new RadioVariantException('Не задан текст метки.');
+            throw new RadioVariantException(translate('form.label-text-not-set'));
         }
 
         parent::__construct($settings);
@@ -80,11 +86,16 @@ class Variant extends AbstractFormComponent
      * @param string $type - тип переключателя
      *
      * @throws RadioVariantException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function setType(string $type) : void
     {
         if (!\in_array($type, [SwitchField::RADIO, SwitchField::CHECKBOX], true)) {
-            throw new RadioVariantException('Значением типа может только checkbox и radio.');
+            throw new RadioVariantException(translate('form.only-checkbox-radio'));
         }
 
         $this->type = $type;

@@ -7,6 +7,7 @@ use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
+use function Scaleplan\Translator\translate;
 
 /**
  * Class OptGroup
@@ -86,11 +87,16 @@ class OptGroup extends AbstractFormComponent
      * @param array $settings
      *
      * @throws FieldException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['label'])) {
-            throw new FieldException('Не заполнена метка группы элементов выпадающего списка.');
+            throw new FieldException(translate('form.select-group-label-not-set'));
         }
 
         $this->setLabel($settings['label']);

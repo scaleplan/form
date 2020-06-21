@@ -7,6 +7,7 @@ use PhpQuery\PhpQuery;
 use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\AbstractFormComponent;
 use Scaleplan\Form\Exceptions\FieldException;
+use function Scaleplan\Translator\translate;
 
 /**
  * Родительский класс полей формы
@@ -151,22 +152,27 @@ abstract class AbstractField extends AbstractFormComponent
     protected $labelAfter;
 
     /**
-     * Конструктор
+     * AbstractField constructor.
      *
      * @param array $settings - настройки объекта
      *
      * @throws FieldException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['type'])) {
-            throw new FieldException('Не задан тип поля.');
+            throw new FieldException(translate('form.field-type-not-set'));
         }
 
         $this->setType($settings['type']);
 
         if (empty($settings['name'])) {
-            throw new FieldException('Не задано имя поля.');
+            throw new FieldException(translate('form.field-name-not-set'));
         }
 
         if (!empty($settings['fieldWrapper'])) {
@@ -196,11 +202,16 @@ abstract class AbstractField extends AbstractFormComponent
      * @param string $type - тип
      *
      * @throws FieldException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function setType(string $type) : void
     {
         if (!\in_array($type, static::ALLOWED_TYPES, true)) {
-            throw new FieldException("Тип поля $type не поддерживается.");
+            throw new FieldException(translate('form.field-type-not-supported', ['type' => $type,]));
         }
 
         $this->type = $type;

@@ -1,0 +1,18 @@
+sections-not-set: Не заданы разделы формы.
+wrong-section-index: Задан неверный индекс раздела формы.
+menu-item-name-not-set: Не задано название элемента меню.
+wrong-hash-format: Неверный формат хэша.
+field-type-not-set: Не задан тип поля.
+field-name-not-set: Не задано имя поля.
+field-type-not-supported: Тип поля :type не поддерживается.
+input-not-supported-type: Тип :type не поддерживается полем input.
+select-group-label-not-set: Не заполнена метка группы элементов выпадающего списка.
+template-file-not-set: Не задан файл шаблона поля.
+label-text-not-set: Не задан текст метки.
+only-checkbox-radio: Значением типа может только checkbox и radio.
+record-index-not-found: Запись не имеет искомого индекса.
+config-error: Ошибка конфигурации.
+field-create-error: Ошибка создания поля формы.
+form-constructor-error: Ошибка конструктора формы.
+menu-item-create-error: Ошибка создания пункта меню.
+radio-create-error: Ошибка создания radio-кнопки.

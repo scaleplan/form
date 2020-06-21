@@ -6,6 +6,7 @@ use PhpQuery\PhpQuery;
 use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
+use function Scaleplan\Translator\translate;
 
 /**
  * Class InputField
@@ -38,6 +39,11 @@ class InputField extends AbstractField
      * @param string $type - тип
      *
      * @throws FieldException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function setType(string $type) : void
     {
@@ -46,7 +52,7 @@ class InputField extends AbstractField
             [self::TEXTAREA, self::SELECT, self::HIDDEN, self::TEMPLATE],
             true)
         ) {
-            throw new FieldException("Тип $type не поддерживается поля input.");
+            throw new FieldException(translate('form.input-not-supported-type', ['type' => $type,]));
         }
 
         $this->type = $type;

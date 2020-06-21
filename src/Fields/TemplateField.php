@@ -8,6 +8,7 @@ use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
 use function Scaleplan\Helpers\get_required_env;
 use Scaleplan\Main\Constants\ConfigConstants;
+use function Scaleplan\Translator\translate;
 
 /**
  * Class TemplateField
@@ -48,11 +49,16 @@ class TemplateField extends AbstractField
      * @param array $settings
      *
      * @throws FieldException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['template'])) {
-            throw new FieldException('Не задан файл шаблона поля.');
+            throw new FieldException(translate('form.template-file-not-set'));
         }
 
         $this->attributes = $this->initObject($settings);

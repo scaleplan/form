@@ -5,6 +5,7 @@ namespace Scaleplan\Form;
 use PhpQuery\PhpQuery;
 use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\MenuException;
+use function Scaleplan\Translator\translate;
 
 /**
  * Класс элементов меню
@@ -46,16 +47,21 @@ class MenuElement extends AbstractFormComponent
     protected $hash = '';
 
     /**
-     * Конструктор
+     * MenuElement constructor.
      *
      * @param array $settings - настройки объекта
      *
      * @throws MenuException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function __construct(array $settings)
     {
         if (empty($settings['text'])) {
-            throw new MenuException('Не задано название элемента меню.');
+            throw new MenuException(translate('form.menu-item-name-not-set'));
         }
 
         parent::__construct($settings);
@@ -67,11 +73,16 @@ class MenuElement extends AbstractFormComponent
      * @param string $hash - хэш
      *
      * @throws MenuException
+     * @throws \ReflectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ContainerTypeNotSupportingException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\DependencyInjectionException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ParameterMustBeInterfaceNameOrClassNameException
+     * @throws \Scaleplan\DependencyInjection\Exceptions\ReturnTypeMustImplementsInterfaceException
      */
     public function setHash(string $hash) : void
     {
         if (!preg_match('/^#[\w-]+$/', $hash)) {
-            throw new MenuException('Неверный формат хэша.');
+            throw new MenuException(translate('form.wrong-hash-format'));
         }
 
         $this->hash = $hash;
