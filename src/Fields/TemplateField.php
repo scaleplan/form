@@ -6,6 +6,8 @@ use PhpQuery\PhpQuery;
 use PhpQuery\PhpQueryObject;
 use Scaleplan\Form\Exceptions\FieldException;
 use Scaleplan\Form\FormHelper;
+use Scaleplan\Main\App;
+use function Scaleplan\DependencyInjection\get_required_static_container;
 use function Scaleplan\Helpers\get_required_env;
 use Scaleplan\Main\Constants\ConfigConstants;
 use function Scaleplan\Translator\translate;
@@ -105,10 +107,14 @@ class TemplateField extends AbstractField
             return null;
         }
 
+        /** @var App $app */
+        $app = get_required_static_container(App::class);
         $renderedTemplate = PhpQuery::newDocumentFileHTML(
             get_required_env(ConfigConstants::BUNDLE_PATH)
             . get_required_env(ConfigConstants::VIEWS_PATH)
             . get_required_env('FORM_PATH')
+            . '/'
+            . $app::getLocale()
             . $this->templatePath
             . '/' . $this->template
         );
